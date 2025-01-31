@@ -32,4 +32,14 @@ class ClassificatoreKNN:
         self.features = features
         self.labels = labels 
 
-    
+    def Euclidian_distance(self,, point:pd.Series) -> pd.Series: 
+        """ 
+        con la funzione Euclidian_distances viene calcolata la ditsanza euclidea tra il punto di test e i campioni di training 
+
+        INPUT: 
+        point (pd.Series) che è il punto che si cuole classificare 
+
+        OUTPUT: 
+        pd.Series che sono le distanze calcolate 
+        """
+        return np.sqrt(((self.features - poit)**2).sum(axis=1)); 

@@ -43,3 +43,50 @@ class ClassificatoreKNN:
         pd.Series che sono le distanze calcolate 
         """
         return np.sqrt(((self.features - point)**2).sum(axis=1))
+
+    def k_nearest_neighbor(self, point: pd.Series) -> pd.Series:
+        """
+        la funzione k_nearest_neighbor trova i vicini più vicini al punto specificato 
+
+        INPUT: 
+        point (pd.Series) che è il punto da classificare 
+
+        OUTPUT: 
+        tipo p.Series ovvero le etichette dei k più vicini 
+        """
+        distances = self.Euclidean_distance(point)
+        nearest_idx = distances.nsmallest(self.k).index
+        return self.labels.loc[nearest_idx]
+
+    def predict(self, point: pd.Series) -> int: 
+        """
+        la funzione predict ha lo scopo di predire la classe di un punto 
+
+        INPUT: 
+        point (pd.Series) che è il punto che vogliamo classificare 
+
+        OUTPUT: 
+        restituisce un intero che corrisponde alla classe predetta 
+        """
+        if self.features is None or self.labels is None: # verifico se il modello è stato addestrato attraverso fit 
+            raise ValueError("Il modello non è addestrato! Importante usare fit prima di predict")
+        neighbors = self.k_nearest_neighbor(point) # chiamo il metodo k_nearest_neighbor per trovare i k vicini più vicini al mio punto. neighbors sarà del tipo pd.Series e conterrà le labels dei vicini trovati
+        c = neighbors.value_counts() # attraverso il metodo value.counts() conto quante volte appare una classe nei vicini 
+
+        # GESTISCO IL CASO DI PAREGGIO 
+
+        if(c == c.max()).sum() >1: # se le classi appaiono lo stesso numero di volte abbiamo il caso di pareggio
+            return random.choice(c [c == c.max()].index.tolist()) # nel caso di pareggio si gestisca casualemte
+        return c.idxmax()
+    
+    def predict_batch(self, points: pd.DataFrame) -> pd.Series: 
+        """
+        Predice le classi per più punti contemporaneamente.
+
+        INPUT:
+        points (pd.DataFrame) sono i dataset di punti che vogliamo classificare
+
+        OUTPUT:
+        pd.Series che corrispondono alle labels predette per ogni punto
+        """
+        return points.apply(self.predict, axis=1)

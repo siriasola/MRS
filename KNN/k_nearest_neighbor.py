@@ -42,4 +42,4 @@ class ClassificatoreKNN:
         OUTPUT: 
         pd.Series che sono le distanze calcolate 
         """
-        return np.sqrt(((self.features - poit)**2).sum(axis=1))
+        return np.sqrt(((self.features - point)**2).sum(axis=1))

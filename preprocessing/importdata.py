@@ -31,6 +31,6 @@ class DatasetProcessor:
             else:
                 raise ValueError("Formato di file non supportato.")
 
-            print("✅ Dataset caricato correttamente.")
+            print("Il Dataset caricato correttamente.")
         except Exception as e:
-            print(f"❌ Errore nel caricamento del file: {e}")
+            print(f" Errore nel caricamento del file: {e}")

@@ -91,32 +91,3 @@ class ClassificatoreKNN:
         """
         return points.apply(self.predict, axis=1)
 
-"""
-
-!!! 
-
-ho fatto delle prove con dei casi semplificati perché ancora stiamo definendo la parte di data processing, dunque la prova per ora è su dei dati ristretti
-"""
-
-# Dati di esempio
-training_features = pd.DataFrame({
-    'Clump Thickness': [5, 4, 3, 7],
-    'Uniformity of Cell Size': [1, 2, 1, 3],
-    'Uniformity of Cell Shape': [1, 2, 1, 4]
-})
-training_labels = pd.Series([2, 4, 2, 4])
-
-test_points = pd.DataFrame({
-    'Clump Thickness': [4, 6],
-    'Uniformity of Cell Size': [2, 3],
-    'Uniformity of Cell Shape': [2, 2]
-})
-
-# Inizializza e addestra il modello
-knn = ClassificatoreKNN(k=3)
-knn.fit(training_features, training_labels)
-
-# Predizione per un batch di punti
-predictions = knn.predict_batch(test_points)
-print("Predizioni per i punti di test:")
-print(predictions)

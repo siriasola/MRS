@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class MetricheCrossValidation:
+
+    """Calcola le diverse metriche di valutazione per un modello di classificazione binaria utilizzando due tecniche di validazione incrociata: K-Fold Cross Validation e Leave-One-Out Cross Validation.
+    """
     
     def __init__(self, y_test: pd.Series, previsioni: list, metriche_scelte: list):
         self.y_test = np.array(y_test)

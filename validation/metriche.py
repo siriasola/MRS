@@ -140,4 +140,3 @@ class MetricheCrossValidation:
         import os 
         os.makedirs(os.path.dirname(filename), exist_ok = True)
         df = pd.DataFrame([metriche])
-        df.to_csv(filename, index = False) 

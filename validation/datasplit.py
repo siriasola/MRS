@@ -2,10 +2,35 @@ import numpy as np
 import pandas as pd
 
 class SplitData:
+
+    """Implementa tre tecniche per la suddivisione dei dati:
+    - Holdout
+    - K-Fold Cross Validation
+    - Leave-One-Out Cross Validation
+    """
+    
     def __init__(self, features: pd.DataFrame, target: pd.Series, k_folds: int):
         self.features = features  # DataFrame contenente le caratteristiche
         self.target = target  # Serie con i valori target
         self.k_folds = k_folds  # Numero di fold per la K-Fold Cross Validation
+
+
+    def split_holdout(self, train_size=0.8):
+        """
+        Divide i dati in training e test set secondo la proporzione specificata.
+        """
+        n = len(self.features)
+        indices = np.arange(n)
+        np.random.shuffle(indices)
+        train_end = int(n * train_size)
+        
+        train_indices = indices[:train_end]
+        test_indices = indices[train_end:]
+        
+        X_train, X_test = self.features.iloc[train_indices], self.features.iloc[test_indices]
+        Y_train, Y_test = self.target.iloc[train_indices], self.target.iloc[test_indices]
+        
+        return X_train, X_test, Y_train, Y_test
 
     def split_k_fold(self):
         """

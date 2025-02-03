@@ -1,49 +1,82 @@
+import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
-class ModelEvaluation:
-    def __init__(self, model, features, target):
-        self.model = model
+from validation.datasplit import SplitData
+from models.k_nearest_neighbor import ClassificatoreKNN
+from validation.metriche import MetricheCrossValidation
+
+class Evaluation:
+    def __init__(self, features: pd.DataFrame, target: pd.Series, k_folds: int, metriche_scelte: list, k: int):
+        """
+        Inizializza la classe Evaluation per valutare il modello con tecniche di validazione incrociata.
+        
+        :param features: DataFrame contenente le feature di input.
+        :param target: Serie contenente le etichette di classe.
+        :param k_folds: Numero di fold per la validazione incrociata.
+        :param metriche_scelte: Lista delle metriche da calcolare.
+        :param k: Numero di vicini da considerare nel KNN.
+        """
         self.features = features
         self.target = target
+        self.k_folds = k_folds
+        self.metriche_scelte = metriche_scelte
+        self.k = k
+        
+        # Creazione di un'istanza della classe SplitData per suddividere i dati
+        self.Split = SplitData(features, target, k_folds)
 
-    def k_fold_cross_validation(self, k):
-        n = len(self.features)
-        indices = np.arange(n)
-        np.random.shuffle(indices)  # Mescolo gli indici per randomizzare la suddivisione
-        fold_size = n // k
-        scores = []
-
-        for i in range(k):
-            test_indices = indices[i * fold_size:(i + 1) * fold_size]
-            train_indices = np.setdiff1d(indices, test_indices)  # Tutti gli altri dati vanno nel training set
-
-            X_train, X_test = self.features.iloc[train_indices], self.features.iloc[test_indices]
-            y_train, y_test = self.target.iloc[train_indices], self.target.iloc[test_indices]
-
-            self.model.train(X_train, y_train)  # Addestriamo il modello
-            predictions = self.model.predict(X_test)  # Facciamo le predizioni
-            score = self.evaluate(y_test, predictions)  # Valutiamo il modello
-            scores.append(score)
-
-        return np.mean(scores)  # Restituiamo la media delle performance
-
-    def leave_one_out_cross_validation(self):
-        n = len(self.features)
-        scores = []
-
-        for i in range(n):
-            X_train = self.features.drop(index=i)
-            y_train = self.target.drop(index=i)
-            X_test = self.features.iloc[i:i+1]  # Prendiamo una sola riga come test
-            y_test = self.target.iloc[i:i+1]
-
-            self.model.train(X_train, y_train)  # Addestriamo il modello
-            prediction = self.model.predict(X_test)  # Facciamo la predizione
-            score = self.evaluate(y_test, prediction)  # Valutiamo il modello
-            scores.append(score)
-
-        return np.mean(scores)  # Media delle performance
-
-    def evaluate(self, y_true, y_pred):
-        """Calcola una metrica di valutazione (qui errore quadratico medio per regressione)."""
-        return np.mean((y_true - y_pred) ** 2)  # Mean Squared Error (MSE)
+    def valutazione_k_fold(self):
+        """
+        Esegue la validazione incrociata K-Fold e calcola le metriche per ciascun fold.
+        """
+        X_train_folds, Y_train_folds, X_test_folds, Y_test_folds = self.Split.split_k_fold()
+        metriche_totali = {m: [] for m in self.metriche_scelte}
+        
+        for i in range(self.k_folds):
+            modello_knn = ClassificatoreKNN(self.k)
+            modello_knn.train(X_train_folds[i].to_numpy(), Y_train_folds[i].to_numpy())
+            previsioni = modello_knn.predict(X_test_folds[i].to_numpy())
+            
+            C_Metriche = MetricheCrossValidation(self.metriche_scelte)
+            metriche_fold = C_Metriche.calcolo_metriche(Y_test_folds[i].to_numpy(), previsioni)
+            
+            for key, value in metriche_fold.items():
+                metriche_totali[key].append(value)
+        
+        return {key: np.mean(values) for key, values in metriche_totali.items()}
+    
+    def valutazione_leave_one_out(self):
+        """
+        Esegue la validazione Leave-One-Out e calcola le metriche per ogni iterazione.
+        """
+        X_train_folds, Y_train_folds, X_test_folds, Y_test_folds = self.Split.split_leave_one_out()
+        metriche_totali = {m: [] for m in self.metriche_scelte}
+        
+        for i in range(len(self.features)):
+            modello_knn = ClassificatoreKNN(self.k)
+            modello_knn.train(X_train_folds[i].to_numpy(), Y_train_folds[i].to_numpy())
+            previsioni = modello_knn.predict(X_test_folds[i].to_numpy())
+            
+            C_Metriche = MetricheCrossValidation(self.metriche_scelte)
+            metriche_loo = C_Metriche.calcolo_metriche(Y_test_folds[i].to_numpy(), previsioni)
+            
+            for key, value in metriche_loo.items():
+                metriche_totali[key].append(value)
+        
+        return {key: np.mean(values) for key, values in metriche_totali.items()}
+    
+    def valutazione_holdout(self, train_size=0.8):
+        """
+        Esegue la validazione Holdout e calcola le metriche.
+        
+        :param train_size: Percentuale di dati da usare per il training (default: 80%)
+        """
+        X_train, X_test, Y_train, Y_test = self.Split.split_holdout(train_size)
+        
+        modello_knn = ClassificatoreKNN(self.k)
+        modello_knn.train(X_train.to_numpy(), Y_train.to_numpy())
+        previsioni = modello_knn.predict(X_test.to_numpy())
+        
+        C_Metriche = MetricheCrossValidation(self.metriche_scelte)
+        return C_Metriche.calcolo_metriche(Y_test.to_numpy(), previsioni)

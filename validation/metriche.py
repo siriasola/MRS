@@ -34,7 +34,7 @@ class MetricheCrossValidation:
 
         if 'Geometric Mean' in self.metriche_scelte:
             sensitivity = metriche.get('Sensitivity', vero_positivo / (vero_positivo + falso_negativo) if (vero_positivo + falso_negativo) != 0 else 0.0)
-            specitivity = metriche.get('Specificity', vero_negativo / (vero_negativo + falso_positivo) if (vero_negativo + falso_positivo) != 0 else 0.0)
+            specificity = metriche.get('Specificity', vero_negativo / (vero_negativo + falso_positivo) if (vero_negativo + falso_positivo) != 0 else 0.0)
             
             metriche['Geometric Mean'] = np.sqrt(sensitivity * specificity)
 

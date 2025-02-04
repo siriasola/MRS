@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from k_nearest_neighbor import ClassificatoreKNN
+from models.k_nearest_neighbor import ClassificatoreKNN
 
 class TestKNNClassifier(unittest.TestCase):
     """Test per il classificatore KNN, inclusi addestramento, errori e predizioni."""

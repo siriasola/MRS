@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 import numpy as np
-from evaluation import Evaluation
+from validation.evaluation import Evaluation
 
 class TestEvaluation(unittest.TestCase):
     def setUp(self):

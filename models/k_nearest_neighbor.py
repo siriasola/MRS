@@ -21,16 +21,35 @@ class ClassificatoreKNN:
         self.features = None # dati training 
         self.labels = None # etichette training 
 
-    def train(self, features: pd.DataFrame, labels: pd.Series) -> None: 
-        """
-        con la funzione fit vengono salvati i dati di training 
+    def train(self, features, labels):
 
-        INPUT: 
-        features (pd.Dataframe) che sono le caratteristiche dei dati ti training 
-        labels (pd.Series) che sono le etichette dei dati di training 
+        """Salva i dati di training assicurandosi che siano DataFrame e Series"""
+
+        # Se features è un array NumPy, lo converto in DataFrame
+        if isinstance(features, np.ndarray):
+            self.features = pd.DataFrame(features)
+        else:
+            self.features = features.copy()  # Se è già un DataFrame, faccio una copia
+
+        # Se labels è un array NumPy, lo converto in Series
+        if isinstance(labels, np.ndarray):
+            self.labels = pd.Series(labels)
+        else:
+            self.labels = labels.copy()
+
+        
+        
+        self.features = features.apply(pd.to_numeric, errors='coerce') # converto le features in numeri
+        self.labels = labels.apply(pd.to_numeric, errors='coerce') # converto le labels in numeri
+        
         """
-        self.features = features
-        self.labels = labels 
+        Rimuove le righe con NaN
+        
+        """
+        mask= self.features.notnull().all(axis=1) & self.labels.notnull() # maschera per rimuovere i valori nulli
+        self.features = self.features[mask]
+        self.labels = self.labels[mask]
+
 
     def Euclidian_distance(self, point:pd.Series) -> pd.Series: 
         """ 
@@ -41,7 +60,10 @@ class ClassificatoreKNN:
 
         OUTPUT: 
         pd.Series che sono le distanze calcolate 
+
         """
+        point = np.array(point).reshape(1,-1)  # Assicura che point sia un array NumPy
+        
         return np.sqrt(((self.features - point)**2).sum(axis=1))
 
     def k_nearest_neighbor(self, point: pd.Series) -> pd.Series:
@@ -76,8 +98,8 @@ class ClassificatoreKNN:
         # GESTISCO IL CASO DI PAREGGIO 
 
         if(c == c.max()).sum() >1: # se le classi appaiono lo stesso numero di volte abbiamo il caso di pareggio
-            return random.choice(c [c == c.max()].index.tolist()) # nel caso di pareggio si gestisca casualemte
-        return c.idxmax()
+            return int(random.choice(c [c == c.max()].index.tolist())) # nel caso di pareggio si gestisca casualemte
+        return int(c.idxmax())
     
     def predict_batch(self, points: pd.DataFrame) -> pd.Series: 
         """
@@ -89,5 +111,6 @@ class ClassificatoreKNN:
         OUTPUT:
         pd.Series che corrispondono alle labels predette per ogni punto
         """
-        return points.apply(self.predict, axis=1)
+        return points.apply(lambda row: self.predict(row), axis=1)  #garantisce che ogni riga venga passata come pd.series
+
 

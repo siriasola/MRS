@@ -24,7 +24,7 @@ class FeatureScaler:
         pd.DataFrame - Dataset scalato
         """
         if method not in ["normalize", "standardize"]:
-            print("⚠️ Metodo non valido! Uso di default: Normalizzazione (Min-Max).")
+            print("Il metodo non è valido! Uso di default: Normalizzazione (Min-Max).")
             method = "normalize"
 
         df_scaled = df.copy()
@@ -39,7 +39,10 @@ class FeatureScaler:
             for column in numeric_columns:
                 min_val = df[column].min()
                 max_val = df[column].max()
-                df_scaled[column] = (df[column] - min_val) / (max_val - min_val)
+                if min_val == max_val: # Evita divisione per zero
+                    df_scaled[column] = 0
+                else:
+                    df_scaled[column] = (df[column] - min_val) / (max_val - min_val)
 
         print(f"\n Metodo applicato a tutte le feature (tranne '{self.target_column}'): {method.upper()}")
         return df_scaled

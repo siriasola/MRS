@@ -14,6 +14,11 @@ class MetricheCrossValidation:
         self.metriche_scelte = metriche_scelte
 
     def calcolo_metriche(self, y_test: pd.Series, previsioni: pd.Series) -> dict:
+
+        #print(">>> calcolo_metriche è stato chiamato!")  # Stampa di debug
+
+       #print("Distribuzione y_test:", np.unique(y_test, return_counts=True))
+        #print("Distribuzione previsioni:", np.unique(previsioni, return_counts=True))
         """
         Calcola le metriche per una singola iterazione.
 
@@ -21,6 +26,8 @@ class MetricheCrossValidation:
         y_test (pd.Series) sono i valori reali 
         previsioni (pd.Series) sono i valori predetti
         """
+
+        
         vero_positivo = np.sum((y_test == 1) & (previsioni == 1))
         vero_negativo = np.sum((y_test == 0) & (previsioni == 0))
         falso_positivo = np.sum((y_test == 0) & (previsioni == 1))
@@ -28,11 +35,13 @@ class MetricheCrossValidation:
 
         metriche = {}
 
+        totale = len(y_test) if len(y_test) > 0 else 1  # Evita divisione per zero
+
         if 'Accuracy Rate' in self.metriche_scelte:
-            metriche['Accuracy Rate'] = (vero_positivo + vero_negativo) / len(y_test) if len(y_test) > 0 else 0.0
+            metriche['Accuracy Rate'] = (vero_positivo + vero_negativo) / totale
 
         if 'Error Rate' in self.metriche_scelte:
-            metriche['Error Rate'] = (falso_positivo + falso_negativo) / len(y_test) if len(y_test) > 0 else 0.0
+            metriche['Error Rate'] = (falso_positivo + falso_negativo) / totale
 
         if 'Sensitivity' in self.metriche_scelte:
             denominatore_sens = (vero_positivo + falso_negativo)

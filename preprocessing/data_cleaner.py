@@ -22,6 +22,10 @@ class DataCleaner:
         df = df.drop_duplicates()
         df = df.dropna(subset=[self.target_column])  # Elimina righe senza il target
         print("Dataset pulito: duplicati rimossi e target senza valore eliminato.")
+        
+        df= df.apply(pd.to_numeric, errors='coerce') #stringhe diventano Nan
+
+        print("Valori NaN dopo conversione numerica:\n", df.isna().sum())
         return df
 
 
@@ -68,5 +72,5 @@ def choose_missing_value_method():
     print("\nScegli un metodo per riempire i valori mancanti:")
     options = {"1": "mean", "2": "median", "3": "mode"}
     
-    choice = input("\nInserisci il numero della tua scelta: ").strip()
+    choice = input("\nInserisci il numero della tua scelta (1=media; 2=mediana; 3=moda): ").strip()
     return options.get(choice, "mean")  # Default: mean se la scelta non è valida

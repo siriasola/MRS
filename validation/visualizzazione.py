@@ -2,47 +2,48 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 def plot_confusion_matrix(y_true, y_pred):
     """
-    Genera e visualizza una Confusion Matrix. 
-    Mostra il numero di veri positivi, veri negativi, falsi positivi e falsi negativi
-    y_true: array dei valori reali
-    y_pred: array dei valori predetti
+    Genera e visualizza una Confusion Matrix.
+
+    y_true: array con le etichette reali
+    y_pred: array con le etichette predette
     """
-    # Classi uniche (0 = benigno, 1 = maligno): trova le classi uniche nei dati di input
-    classi = np.unique(y_true)
-    
-    # Creazione della matrice di confusione con valori inizializzati a zero
-    cm = np.zeros((len(classi), len(classi)), dtype=int)
-    
-    for i in range(len(y_true)):
+    # Trova le classi uniche nei dati (gestisce numeri e stringhe)
+    classi = np.unique(np.concatenate((y_true, y_pred)))
+    num_classi = len(classi)
 
-        """Riempie la matrice di confusione contando quante volte il modello ha previsto correttamente
-         e scorrettamente ciascuna classe"""
-        
-        cm[y_true[i], y_pred[i]] += 1
+    # Creazione della matrice di confusione vuota
+    cm = np.zeros((num_classi, num_classi), dtype=int)
 
-    # Plot della Confusion Matrix
+    # Mappare le etichette a indici validi
+    class_to_index = {label: idx for idx, label in enumerate(classi)}
 
-    """Visualizzazione della matrice tramite matplotlib: 
-     usa matshow per rappresentarla con i colori e agigunge le etichette sugli assi per indicare
-      "Benigno" (0) e "Maligno" (1) ed infine inserisce i valori numerici direttamente nella matrice"""
-    
+    # Riempire la matrice di confusione
+    for i in range(len(y_true)-1):
+        true_index = class_to_index[y_true[i]]
+        pred_index = class_to_index[y_pred[i]]
+        cm[true_index, pred_index] += 1
+
+    # Creazione della figura
     fig, ax = plt.subplots()
     cax = ax.matshow(cm, cmap="Blues")
     plt.colorbar(cax)
 
-    # Etichette
-    ax.set_xticks([0, 1])
-    ax.set_yticks([0, 1])
-    ax.set_xticklabels(["Benigno", "Maligno"])
-    ax.set_yticklabels(["Benigno", "Maligno"])
+    # Etichette sugli assi
+    ax.set_xticks(np.arange(num_classi))
+    ax.set_yticks(np.arange(num_classi))
+    ax.set_xticklabels(classi)
+    ax.set_yticklabels(classi)
     plt.xlabel("Predetto")
     plt.ylabel("Reale")
 
-    # Mostra i numeri dentro la matrice
-    for i in range(len(classi)):
-        for j in range(len(classi)):
+    #Inserire i valori nella matrice
+    for i in range(num_classi):
+        for j in range(num_classi):
             plt.text(j, i, str(cm[i, j]), ha='center', va='center', color="black")
 
     plt.title("Confusion Matrix")

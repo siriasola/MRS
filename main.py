@@ -113,27 +113,29 @@ def evaluate_model(features, target, strategy, test_size, k_folds):
     evaluation = Evaluation(features, target, k_folds=k_folds, metriche_scelte=metriche_scelte, k=k)
 
     if strategy == "holdout":
-        metrics_result = evaluation.valutazione_holdout(train_size=test_size)
+        metrics_result, y_pred = evaluation.valutazione_holdout(train_size=test_size)
     elif strategy == "k_fold":
-        metrics_result = evaluation.valutazione_k_fold()
+        metrics_result, y_pred = evaluation.valutazione_k_fold()
     elif strategy == "leave_one_out":
-        metrics_result = evaluation.valutazione_leave_one_out()
+        metrics_result, y_pred = evaluation.valutazione_leave_one_out()
 
     print("\nRisultati della validazione:")
     for metrica, valore in metrics_result.items():
         print(f"{metrica}: {valore:.4f}")
 
-    return target
+    return target, y_pred
 
-def visualize_results(target):
+
+def visualize_results(target, y_pred):
     """Genera la matrice di confusione e la curva ROC."""
     print("\nGenerazione della matrice di confusione...")
-    plot_confusion_matrix(target.to_numpy(), target.to_numpy())  # Da sostituire con y_pred
+    plot_confusion_matrix(target.to_numpy(), y_pred)  # Usa y_pred corretto
 
     print("\nGenerazione della curva ROC...")
-    plot_roc_curve(target.to_numpy(), target.to_numpy())  # Da sostituire con probabilità predette
+    plot_roc_curve(target.to_numpy(), y_pred)  # Usa y_pred corretto
 
     print("\nProcesso completato con successo!")
+
 
 def main():
     df = load_dataset()
@@ -147,8 +149,9 @@ def main():
     features, target = split_features_target(df)
     strategy, test_size, k_folds = choose_validation_strategy()
 
-    target = evaluate_model(features, target, strategy, test_size, k_folds)
-    visualize_results(target)
+    target, y_pred = evaluate_model(features, target, strategy, test_size, k_folds)
+    visualize_results(target, y_pred)
+
 
 if __name__ == "__main__":
     main()

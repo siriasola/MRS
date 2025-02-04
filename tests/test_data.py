@@ -23,7 +23,7 @@ class TestDataProcessing(unittest.TestCase):
 
     def test_file_format_error(self):
         """Testa la gestione di formati di file non supportati."""
-        processor = DatasetProcessor(file_path="data.unsupported")
+        processor = DatasetProcessor(file_path="C:\Users\rebec\OneDrive\Desktop\MRS\Data\version_1.csv")
         self.assertIsNone(processor.load_data(), "Il file con estensione non supportata dovrebbe fallire il caricamento.")
 
     def test_inconsistent_data_handling(self):

@@ -21,7 +21,7 @@ class ClassificatoreKNN:
         self.features = None # dati training 
         self.labels = None # etichette training 
 
-    def fit(self, features: pd.DataFrame, labels: pd.Series) -> None: 
+    def train(self, features: pd.DataFrame, labels: pd.Series) -> None: 
         """
         con la funzione fit vengono salvati i dati di training 
 
@@ -54,7 +54,7 @@ class ClassificatoreKNN:
         OUTPUT: 
         tipo p.Series ovvero le etichette dei k più vicini 
         """
-        distances = self.Euclidean_distance(point)
+        distances = self.Euclidian_distance(point)
         nearest_idx = distances.nsmallest(self.k).index
         return self.labels.loc[nearest_idx]
 

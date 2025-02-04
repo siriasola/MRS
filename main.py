@@ -7,7 +7,7 @@ from validation.datasplit import SplitData
 from validation.evaluation import Evaluation
 from validation.metriche import MetricheCrossValidation
 from validation.visualizzazione import plot_confusion_matrix, plot_roc_curve
-from k_nearest_neighbor import ClassificatoreKNN
+from models import ClassificatoreKNN
 
 def load_dataset():
     """Chiede all'utente il percorso del file e carica il dataset."""

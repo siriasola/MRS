@@ -32,7 +32,7 @@ class MissingValueHandler:
 
     def __init__(self, method="mean"):
         if method not in ["mean", "median", "mode"]:
-            print("⚠️ Metodo scelto non valido, uso di default: MEDIA")
+            print("Il metodo scelto non valido, uso di default: MEDIA")
             self.method = "mean"
         else:
             self.method = method

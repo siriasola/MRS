@@ -2,78 +2,65 @@
 import numpy as np
 import pandas as pd
 
-class AutoScaler:
+class FeatureScaler:
     """
-    Classe che analizza i dati e sceglie automaticamente se applicare
-    Standardizzazione (Z-score) o Normalizzazione (Min-Max).
+    Classe per applicare Normalizzazione (Min-Max) o Standardizzazione (Z-score) su un dataset.
+    L'utente può scegliere il metodo e la colonna 'classtype_v1' verrà esclusa dalla trasformazione.
     """
 
-    def __init__(self):
-        self.decisions = {}
+    def __init__(self, target_column="classtype_v1"):
+        self.target_column = target_column  # Esclude questa colonna dallo scaling
 
-    def is_normal_distribution(self, values):
+    def scale_features(self, df, method):
         """
-        Determina se i dati seguono una distribuzione normale basandosi sullo skewness (asimmetria).
+        Applica il metodo scelto (Normalizzazione o Standardizzazione) a tutte le colonne numeriche, 
+        escludendo la colonna target.
 
         Parametri:
-        values (np.array) - Serie di valori numerici
+        df (pd.DataFrame) - Il dataset da scalare
+        method (str) - "normalize" per Normalizzazione, "standardize" per Standardizzazione
 
         Ritorna:
-        bool - True se la distribuzione è normale, False altrimenti
+        pd.DataFrame - Dataset scalato
         """
-        mean = np.mean(values)
-        median = np.median(values)
-        std = np.std(values)
+        if method not in ["normalize", "standardize"]:
+            print("⚠️ Metodo non valido! Uso di default: Normalizzazione (Min-Max).")
+            method = "normalize"
 
-        skewness = (3 * (mean - median)) / std  # Approssimazione della skewness
+        df_scaled = df.copy()
+        numeric_columns = [col for col in df.select_dtypes(include=[np.number]).columns if col != self.target_column]
 
-        # Se il valore assoluto della skewness è < 0.5, la distribuzione è considerata normale
-        return abs(skewness) < 0.5
+        if method == "standardize":
+            for column in numeric_columns:
+                mean_val = df[column].mean()
+                std_val = df[column].std()
+                df_scaled[column] = (df[column] - mean_val) / std_val
+        else:  # method == "normalize"
+            for column in numeric_columns:
+                min_val = df[column].min()
+                max_val = df[column].max()
+                df_scaled[column] = (df[column] - min_val) / (max_val - min_val)
 
-    def choose_scaling_method(self, df):
-        """
-        Analizza i dati per determinare il miglior metodo di scaling.
+        print(f"\n Metodo applicato a tutte le feature (tranne '{self.target_column}'): {method.upper()}")
+        return df_scaled
 
-        Parametri:
-        df (pd.DataFrame) - Il dataset su cui applicare il metodo
+def user_choose_scaling_method():
+    """
+    Permette all'utente di scegliere tra Normalizzazione e Standardizzazione.
 
-        Ritorna:
-        pd.DataFrame - Dataset normalizzato
-        dict - Metodo scelto per ogni colonna
-        str - Metodo finale applicato all'intero dataset
-        """
-        results = {}
+    Ritorna:
+    str - Metodo scelto ("normalize" o "standardize")
+    """
+    print("\n Scegli il metodo di scaling per tutte le feature:")
+    print("1. Normalizzazione (Min-Max Scaling)")
+    print("2. Standardizzazione (Z-score Scaling)")
 
-        for column in df.columns:
-            values = df[column].dropna().values  # Rimuove i NaN
+    choice = input("➡️ Inserisci il numero della tua scelta: ").strip()
 
-            # Determina se la distribuzione è normale
-            is_normal = self.is_normal_distribution(values)
-
-            # Calcola il range interquartile (IQR) per verificare gli outlier
-            Q1, Q3 = np.percentile(values, [25, 75])
-            IQR = Q3 - Q1
-            lower_bound = Q1 - 1.5 * IQR
-            upper_bound = Q3 + 1.5 * IQR
-            num_outliers = np.sum((values < lower_bound) | (values > upper_bound))
-
-            # Decisione del metodo di scaling
-            if is_normal or num_outliers > 0:
-                method = "Z-score Standardization"
-            else:
-                method = "Min-Max Normalization"
-
-            results[column] = method
-
-        # Determina il metodo più usato e applica lo stesso a tutto il dataset
-        method_counts = pd.Series(results).value_counts()
-        final_method = method_counts.idxmax()
-
-        if final_method == "Z-score Standardization":
-            df_scaled = (df - df.mean()) / df.std()
-        else:
-            df_scaled = (df - df.min()) / (df.max() - df.min())
-
-        self.decisions = results
-
-        return df_scaled, results, final_method
+    if choice == "1":
+        return "normalize"
+    elif choice == "2":
+        return "standardize"
+    else:
+        print(" Scelta non valida, uso di default: Normalizzazione (Min-Max).")
+        return "normalize"

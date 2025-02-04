@@ -1,12 +1,12 @@
 import pandas as pd
 import os
-from importdata import DatasetProcessor
-from data_cleaner import DataCleaner, MissingValueHandler, choose_missing_value_method
-from normalizzazione import FeatureScaler, user_choose_scaling_method
-from datasplit import SplitData
-from evaluation import Evaluation
-from metriche import MetricheCrossValidation
-from visualizzazione import plot_confusion_matrix, plot_roc_curve
+from preprocessing.importdata import DatasetProcessor
+from preprocessing.data_cleaner import DataCleaner, MissingValueHandler, choose_missing_value_method
+from preprocessing.normalizzazione import FeatureScaler, user_choose_scaling_method
+from validation.datasplit import SplitData
+from validation.evaluation import Evaluation
+from validation.metriche import MetricheCrossValidation
+from validation.visualizzazione import plot_confusion_matrix, plot_roc_curve
 from k_nearest_neighbor import ClassificatoreKNN
 
 def load_dataset():

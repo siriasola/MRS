@@ -17,20 +17,26 @@ class TestEvaluation(unittest.TestCase):
     def test_valutazione_k_fold(self):
         """Testa la validazione K-Fold."""
         risultati = self.evaluator.valutazione_k_fold()
-        self.assertIsInstance(risultati, dict)
-        self.assertTrue(all(m in risultati for m in self.metriche_scelte))
+        self.assertIsInstance(risultati, tuple)  # Ora gestiamo una tupla
+        self.assertIsInstance(risultati[0], dict)  # Il primo elemento deve essere il dizionario delle metriche
+        self.assertTrue(all(m in risultati[0] for m in self.metriche_scelte))
+
     
     def test_valutazione_leave_one_out(self):
         """Testa la validazione Leave-One-Out."""
         risultati = self.evaluator.valutazione_leave_one_out()
-        self.assertIsInstance(risultati, dict)
-        self.assertTrue(all(m in risultati for m in self.metriche_scelte))
-    
+        self.assertIsInstance(risultati, tuple)
+        self.assertIsInstance(risultati[0], dict)
+        self.assertTrue(all(m in risultati[0] for m in self.metriche_scelte))
+
     def test_valutazione_holdout(self):
         """Testa la validazione Holdout."""
         risultati = self.evaluator.valutazione_holdout()
-        self.assertIsInstance(risultati, dict)
-        self.assertTrue(all(m in risultati for m in self.metriche_scelte))
+        self.assertIsInstance(risultati, tuple)
+        self.assertIsInstance(risultati[0], dict)
+        self.assertTrue(all(m in risultati[0] for m in self.metriche_scelte))
+
+ 
     
 if __name__ == '__main__':
     unittest.main()

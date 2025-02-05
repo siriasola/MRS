@@ -157,19 +157,25 @@ def evaluate_model(features, target, strategy, test_size, k_folds):
 
     evaluation = Evaluation(features, target, k_folds=k_folds, metriche_scelte=metriche_scelte, k=k)
 
+    metrics_result = None
+    y_pred = None
+    y_test = None
+    
     if strategy == "holdout":
         metrics_result, y_pred, y_test_holdout = evaluation.valutazione_holdout(train_size=test_size)
         # Restituisco y_test_holdout al posto di target!
-        return y_test_holdout, y_pred
+        y_test = y_test_holdout
     
     elif strategy == "k_fold":
         metrics_result, y_pred = evaluation.valutazione_k_fold()
         # In k-fold y_pred è lungo quanto l'intero target, quindi lì puoi ritornare l’originale
-        return target, y_pred
+        #return target, y_pred
+        y_test = target
 
     elif strategy == "leave_one_out":
         metrics_result, y_pred = evaluation.valutazione_leave_one_out()
-        return target, y_pred
+        #return target, y_pred
+        y_test = target
 
 
     """
@@ -179,8 +185,8 @@ def evaluate_model(features, target, strategy, test_size, k_folds):
         metrics_result, y_pred = evaluation.valutazione_k_fold()
     elif strategy == "leave_one_out":
         metrics_result, y_pred = evaluation.valutazione_leave_one_out()
-
-    print("\nRisultati della validazione:")"""
+    """
+    print("\nRisultati della validazione:")
     for metrica, valore in metrics_result.items():
         # Nel caso l'AUC non possa essere calcolato (mancano le probabilità) potresti avere None
         if valore is not None:
@@ -188,7 +194,7 @@ def evaluate_model(features, target, strategy, test_size, k_folds):
         else:
             print(f"{metrica}: N/A")
 
-    return target, y_pred
+    return y_test, y_pred
     
 
 def visualize_results(target, y_pred):

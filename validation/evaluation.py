@@ -71,7 +71,7 @@ class Evaluation:
             
             probabilita = modello_knn.predict_proba_batch(pd.DataFrame(X_test_folds[i])) 
             
-            y_pred_totale.append(previsioni[0])  # Un solo elemento per iterazione
+            y_pred_totale.append(previsioni.iloc[0])  # Un solo elemento per iterazione
 
             C_Metriche = MetricheCrossValidation(self.metriche_scelte)
             metriche_loo = C_Metriche.calcolo_metriche(pd.Series(Y_test_folds[i]), previsioni, probabilita)

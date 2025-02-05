@@ -61,11 +61,11 @@ def scale_features(df, target_column="classtype_v1"):
     print(df_scaled.head())
     return df_scaled
 
-def split_features_target(df, target_column="classtype_v1"):
+def split_features_target(df_scaled, target_column="classtype_v1"):
     """Separa le feature dal target."""
     print("\nSeparazione del dataset in features e target...")
-    features = df.drop(columns=[target_column], errors='ignore')
-    target = df[target_column]
+    features = df_scaled.drop(columns=[target_column], errors='ignore')
+    target = df_scaled[target_column]
 
     print("\nPrime righe delle features:")
     print(features.head())
@@ -150,8 +150,8 @@ def choose_metriche():
 
     # Se l'utente non ha scelto metriche valide, impostiamo un fallback di default
     if not metriche_valide:
-        print("Nessuna metrica valida selezionata, userò 'Accuracy Rate' come default.")
-        metriche_valide = ["Accuracy Rate"]
+        print("Nessuna metrica valida selezionata, verranno analizzate tutte.")
+        metriche_valide = ["Accuracy Rate","Error Rate","Sensitivity","Specificity","Geometric Mean","AUC"]
 
     return metriche_valide
 

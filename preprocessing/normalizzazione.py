@@ -63,7 +63,7 @@ def user_choose_scaling_method():
     print("1. Normalizzazione (Min-Max Scaling)")
     print("2. Standardizzazione (Z-score Scaling)")
 
-    choice = input("➡️ Inserisci il numero della tua scelta: ").strip()
+    choice = input("Inserisci il numero della tua scelta: ").strip()
 
     if choice == "1":
         return "normalize"

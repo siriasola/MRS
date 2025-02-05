@@ -15,7 +15,7 @@ class TestKNNClassifier(unittest.TestCase):
 
     def test_knn_prediction(self):
         """Testa una predizione KNN con un piccolo dataset di test."""
-        self.knn.fit(pd.DataFrame({"Feature1": [1, 2, 3], "Feature2": [2, 3, 4]}), pd.Series([0, 1, 0]))
+        self.knn.train(pd.DataFrame({"Feature1": [1, 2, 3], "Feature2": [2, 3, 4]}), pd.Series([0, 1, 0]))
         prediction = self.knn.predict(pd.Series([1.5, 2.5]))
         self.assertIn(prediction, [0, 1], "La predizione dovrebbe essere una delle classi previste.")
 

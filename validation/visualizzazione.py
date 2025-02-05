@@ -49,6 +49,32 @@ def plot_confusion_matrix(y_true, y_pred):
     plt.title("Confusion Matrix")
     plt.show()
 
+import matplotlib.pyplot as plt
+
+def plot_metriche_bar(metriche_dict):
+    """
+    Disegna un grafico a barre con le metriche passate in `metriche_dict`,
+    dove le chiavi sono i nomi delle metriche e i valori i punteggi.
+    """
+    # Filtra eventuali metriche = None (ad es. se l'AUC non è calcolabile)
+    metriche_filtrate = {m: v for m, v in metriche_dict.items() if v is not None}
+
+    # Se vuoi forzare l’asse Y da 0 a 1, fai:
+    plt.figure(figsize=(8, 6))
+    plt.bar(range(len(metriche_filtrate)), list(metriche_filtrate.values()), 
+            color=['#1f77b4', '#2ca02c', '#ff7f0e', '#d62728', '#9467bd', '#17becf'])
+    # Imposta le etichette sull'asse X
+    plt.xticks(range(len(metriche_filtrate)), list(metriche_filtrate.keys()), rotation=45)
+    plt.ylim([0, 1.05])  # Se vuoi vedere bene i valori fino a 1
+
+    plt.title("Performance Metrics")
+    plt.xlabel("Metrics")
+    plt.ylabel("Value")
+
+    plt.tight_layout()
+    plt.show()
+
+
 def plot_roc_curve(y_true, y_prob):
     """
     Genera la Curva ROC (Receiver Operating Characteristic) e calcola l'AUC (Area Under the Curve) usando 

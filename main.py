@@ -6,7 +6,7 @@ from preprocessing.normalizzazione import FeatureScaler, user_choose_scaling_met
 from validation.datasplit import SplitData
 from validation.evaluation import Evaluation
 from validation.metriche import MetricheCrossValidation
-from validation.visualizzazione import plot_confusion_matrix, plot_roc_curve
+from validation.visualizzazione import plot_confusion_matrix, plot_metriche_bar, plot_roc_curve
 from models import ClassificatoreKNN
 
 def load_dataset():
@@ -194,7 +194,7 @@ def evaluate_model(features, target, strategy, test_size, k_folds):
         else:
             print(f"{metrica}: N/A")
 
-    return y_test, y_pred
+    return y_test, y_pred, metrics_result
     
 
 def visualize_results(target, y_pred):
@@ -220,8 +220,9 @@ def main():
     features, target = split_features_target(df)
     strategy, test_size, k_folds = choose_validation_strategy()
 
-    y_test, y_pred = evaluate_model(features, target, strategy, test_size, k_folds)
+    y_test, y_pred, metrics_result = evaluate_model(features, target, strategy, test_size, k_folds)
     visualize_results(y_test, y_pred)
+    plot_metriche_bar(metrics_result)
 
 
 if __name__ == "__main__":

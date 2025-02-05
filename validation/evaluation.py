@@ -22,10 +22,11 @@ class Evaluation:
         # Creazione di un'istanza della classe SplitData per suddividere i dati
         self.Split = SplitData(features, target, k_folds)
 
+    """
     def valutazione_k_fold(self):
-        """
+        
         Esegue la validazione incrociata K-Fold e calcola le metriche per ciascun fold.
-        """
+        
         X_train_folds, Y_train_folds, X_test_folds, Y_test_folds = self.Split.split_k_fold()
         metriche_totali = {m: [] for m in self.metriche_scelte}
         y_pred_totale = []
@@ -51,6 +52,41 @@ class Evaluation:
 
         metriche_medie = {key: np.mean(values) for key, values in metriche_totali.items()}
         return metriche_medie, np.array(y_pred_totale)  # Ora restituisce anche le previsioni!
+    """
+
+    def valutazione_k_fold(self):
+    # Ora la split_k_fold restituisce 5 valori
+        X_train_folds, Y_train_folds, X_test_folds, Y_test_folds, test_indices_folds = self.Split.split_k_fold()
+
+        metriche_totali = {m: [] for m in self.metriche_scelte}
+        
+        # Inizializziamo un array vuoto (o np.zeros) per TUTTI i campioni = len(self.target)
+        # Ciò ci consentirà di inserire le predizioni al posto giusto
+        y_pred_all = np.zeros(len(self.target), dtype=int)
+
+        for i in range(self.k_folds):
+            # Istanzia e addestra il modello su X_train_folds[i]
+            modello_knn = ClassificatoreKNN(self.k)
+            modello_knn.train(X_train_folds[i], Y_train_folds[i])
+
+            # Calcola le predizioni sul test fold
+            previsioni = modello_knn.predict_batch(X_test_folds[i])
+            probabilita = modello_knn.predict_proba_batch(X_test_folds[i])
+
+            # Assegniamo le predizioni negli indici corrispondenti
+            y_pred_all[test_indices_folds[i]] = previsioni
+            
+            # Calcola le metriche per questo fold
+            C_Metriche = MetricheCrossValidation(self.metriche_scelte)
+            metriche_fold = C_Metriche.calcolo_metriche(Y_test_folds[i], previsioni, probabilita)
+
+            # Aggiungi i risultati di fold in fold
+            for key, value in metriche_fold.items():
+                metriche_totali[key].append(value)
+
+        # Calcoliamo la media delle metriche su tutti i fold
+        metriche_medie = {key: np.mean(values) for key, values in metriche_totali.items()}
+        return metriche_medie, y_pred_all  # y_pred_all è ordinato correttamente!
 
     def valutazione_leave_one_out(self):
         """

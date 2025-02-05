@@ -182,7 +182,7 @@ def evaluate_model(features, target, strategy, test_size, k_folds):
     if strategy == "holdout":
         metrics_result, y_pred = evaluation.valutazione_holdout(train_size=test_size)
     elif strategy == "k_fold":
-        metrics_result, y_pred = evaluation.valutazione_k_fold()
+        metrics_result, y_pred = evaluation.valutazione_k_fold() 
     elif strategy == "leave_one_out":
         metrics_result, y_pred = evaluation.valutazione_leave_one_out()
     """

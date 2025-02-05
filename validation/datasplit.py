@@ -31,11 +31,12 @@ class SplitData:
         Y_train, Y_test = self.target.iloc[train_indices], self.target.iloc[test_indices]
         
         return X_train, X_test, Y_train, Y_test
-
+    
+    """
     def split_k_fold(self):
-        """
+        
         Divide i dati in K fold per la validazione incrociata.
-        """
+        
         #definiamo il metodo per effettuare la K-Fold Cross Validation
         n = len(self.features) #numero di righe nel dataset
         indices = np.arange(n) #crea un array di indici 
@@ -55,7 +56,38 @@ class SplitData:
             Y_test_folds.append(self.target.iloc[test_indices])
         
         return X_train_folds, Y_train_folds, X_test_folds, Y_test_folds
-    
+    """
+
+    def split_k_fold(self):
+        n = len(self.features)
+        indices = np.arange(n)
+        np.random.shuffle(indices)
+        fold_size = n // self.k_folds
+
+        X_train_folds, Y_train_folds = [], []
+        X_test_folds, Y_test_folds = [], []
+        test_indices_folds = [] 
+
+        for i in range(self.k_folds):
+            # per l'ultimo fold prendiamo tutti gli indici rimanenti
+            if i < self.k_folds - 1:
+                test_indices = indices[i * fold_size: (i + 1) * fold_size]
+            else:
+                test_indices = indices[i * fold_size:]
+
+            train_indices = np.setdiff1d(indices, test_indices)
+
+            # Salvataggio dei vari set
+            X_train_folds.append(self.features.iloc[train_indices])
+            Y_train_folds.append(self.target.iloc[train_indices])
+            X_test_folds.append(self.features.iloc[test_indices])
+            Y_test_folds.append(self.target.iloc[test_indices])
+
+            # Salviamo anche gli indici di test
+            test_indices_folds.append(test_indices)
+
+        return X_train_folds, Y_train_folds, X_test_folds, Y_test_folds, test_indices_folds
+
     #definiamo il metodo per effetturale la Leave-One-Out Cross Validation
     def split_leave_one_out(self):
         """

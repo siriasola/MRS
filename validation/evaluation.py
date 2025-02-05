@@ -22,37 +22,7 @@ class Evaluation:
         # Creazione di un'istanza della classe SplitData per suddividere i dati
         self.Split = SplitData(features, target, k_folds)
 
-    """
-    def valutazione_k_fold(self):
-        
-        Esegue la validazione incrociata K-Fold e calcola le metriche per ciascun fold.
-        
-        X_train_folds, Y_train_folds, X_test_folds, Y_test_folds = self.Split.split_k_fold()
-        metriche_totali = {m: [] for m in self.metriche_scelte}
-        y_pred_totale = []
 
-        for i in range(self.k_folds):
-            modello_knn = ClassificatoreKNN(self.k)
-
-            X_train = pd.DataFrame(X_train_folds[i])
-            Y_train = pd.Series(Y_train_folds[i])
-
-            modello_knn.train(X_train, Y_train)
-            previsioni = modello_knn.predict_batch(pd.DataFrame(X_test_folds[i]))
-
-            probabilita = modello_knn.predict_proba_batch(pd.DataFrame(X_test_folds[i]))
-
-            y_pred_totale.extend(previsioni)
-
-            C_Metriche = MetricheCrossValidation(self.metriche_scelte)
-            metriche_fold = C_Metriche.calcolo_metriche(pd.Series(Y_test_folds[i]), previsioni, probabilita)
-
-            for key, value in metriche_fold.items():
-                metriche_totali[key].append(value)
-
-        metriche_medie = {key: np.mean(values) for key, values in metriche_totali.items()}
-        return metriche_medie, np.array(y_pred_totale)  # Ora restituisce anche le previsioni!
-    """
 
     def valutazione_k_fold(self):
     # Ora la split_k_fold restituisce 5 valori

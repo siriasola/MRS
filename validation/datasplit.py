@@ -31,33 +31,7 @@ class SplitData:
         Y_train, Y_test = self.target.iloc[train_indices], self.target.iloc[test_indices]
         
         return X_train, X_test, Y_train, Y_test
-    
-    """
-    def split_k_fold(self):
-        
-        Divide i dati in K fold per la validazione incrociata.
-        
-        #definiamo il metodo per effettuare la K-Fold Cross Validation
-        n = len(self.features) #numero di righe nel dataset
-        indices = np.arange(n) #crea un array di indici 
-        np.random.shuffle(indices)  # Mescola gli indici per garantire randomizzazione
-        fold_size = n // self.k_folds  # Dimensione di ciascun fold
-        
-        X_train_folds, Y_train_folds, X_test_folds, Y_test_folds = [], [], [], []  #inizializziamo liste vuote per la memorizzazione dei set di training e test 
-
-        #creiamo un loop per iterare su ogni fold 
-        for i in range(self.k_folds):
-            test_indices = indices[i * fold_size: (i + 1) * fold_size] if i < self.k_folds - 1 else indices[i * fold_size:]
-            train_indices = np.setdiff1d(indices, test_indices)
-            
-            X_train_folds.append(self.features.iloc[train_indices])
-            Y_train_folds.append(self.target.iloc[train_indices])
-            X_test_folds.append(self.features.iloc[test_indices])
-            Y_test_folds.append(self.target.iloc[test_indices])
-        
-        return X_train_folds, Y_train_folds, X_test_folds, Y_test_folds
-    """
-
+   
     def split_k_fold(self):
         n = len(self.features)
         indices = np.arange(n)

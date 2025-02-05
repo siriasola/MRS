@@ -7,6 +7,26 @@ La distinzione tra cellule benigne e maligne avviene attraverso l’analisi di d
 ### **Obiettivo del Progetto**  
 Questo progetto si propone di sviluppare un modello di **machine learning** capace di classificare le cellule tumorali in **benigne** o **maligne** con elevata accuratezza. A tal fine, verrà utilizzato il dataset **Breast Cancer Wisconsin (Original)**, ampiamente impiegato nella ricerca per la classificazione dei tumori al seno. L’algoritmo implementato potrà essere utilizzato come supporto ai medici per migliorare la precisione e la rapidità della diagnosi.  
 
+### **Il dataste Dataset version_1.csv**
+
+Il dataset version_1.csv svolge un ruolo centrale in questo progetto, fornendo i dati necessari per l’analisi e la classificazione dei tumori. Di seguito è riportata una descrizione dettagliata del suo contenuto:
+	•	Numero di Campioni: Variabile a seconda della versione del dataset, in genere centinaia di campioni.
+	•	Numero di Caratteristiche: 13 caratteristiche per ciascun campione.
+	•	Descrizione delle Caratteristiche:
+	•	Blood Pressure: Pressione sanguigna registrata (non direttamente correlata alle cellule, possibile variabile aggiuntiva).
+	•	Mitoses: Frequenza delle mitosi, indicativa del grado di proliferazione cellulare.
+	•	Sample code number: Identificativo univoco per ogni campione di analisi (non utilizzato nell’analisi, ma mantenuto nel     dataset).
+	•	Normal Nucleoli: Numero di nucleoli normali presenti nelle cellule.
+	•	Single Epithelial Cell Size: Dimensione della singola cellula epiteliale, un indicatore della regolarità.
+	•	Uniformity of Cell Size: Uniformità delle dimensioni cellulari; valori elevati possono indicare malignità.
+	•	Clump Thickness: Spessore del gruppo di cellule, utile per valutare la densità dei campioni.
+	•	Heart Rate: Frequenza cardiaca (aggiunto per scopi di studio, non direttamente legato alla classificazione).
+	•	Marginal Adhesion: Capacità delle cellule di aderire tra loro.
+	•	Bland Chromatin: Cromatina omogenea, legata all’aspetto dei nuclei cellulari.
+	•	classtype_v1: Etichetta di classificazione delle cellule tumorali (2 = benigno, 4 = maligno).
+	•	Uniformity of Cell Shape: Uniformità della forma delle cellule, importante per identificare alterazioni morfologiche.
+	•	Bare Nucleix_wrong: Nuclei scoperti (probabilmente un errore di digitazione, riferito a “Bare Nuclei”).
+
 ### **Metodologia**  
 Per garantire una valutazione affidabile del modello, verranno applicate diverse tecniche di validazione, tra cui:  
 - **Holdout** 

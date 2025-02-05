@@ -23,7 +23,7 @@ def plot_confusion_matrix(y_true, y_pred):
     class_to_index = {label: idx for idx, label in enumerate(classi)}
 
     # Riempire la matrice di confusione
-    for i in range(len(y_true)-1):
+    for i in range(len(y_true)):
         true_index = class_to_index[y_true[i]]
         pred_index = class_to_index[y_pred[i]]
         cm[true_index, pred_index] += 1

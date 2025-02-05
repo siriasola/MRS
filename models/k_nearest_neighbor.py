@@ -113,4 +113,20 @@ class ClassificatoreKNN:
         """
         return points.apply(lambda row: self.predict(row), axis=1)  #garantisce che ogni riga venga passata come pd.series
 
+    ## necessari per la metrica AUC 
+    
+    def predict_proba(self, point: pd.Series) -> float:
+        """
+        Restituisce la "probabilità" che il punto appartenga alla classe 1
+        come frazione di vicini di classe 1.
+        """
+        neighbors = self.k_nearest_neighbor(point)  # etichette dei k vicini
+        # Calcoliamo la frazione di vicini che sono == 1
+        return neighbors.mean()  # Se i vicini sono [1,0,1,1,0] => 3/5 = 0.6
 
+    def predict_proba_batch(self, points: pd.DataFrame) -> pd.Series:
+        """
+        Restituisce la 'probabilità' in batch come frazione di vicini di classe 1
+        per ogni campione.
+        """
+        return points.apply(lambda row: self.predict_proba(row), axis=1)

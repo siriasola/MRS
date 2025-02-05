@@ -38,10 +38,13 @@ class Evaluation:
 
             modello_knn.train(X_train, Y_train)
             previsioni = modello_knn.predict_batch(pd.DataFrame(X_test_folds[i]))
+
+            probabilita = modello_knn.predict_proba_batch(pd.DataFrame(X_test_folds[i]))
+
             y_pred_totale.extend(previsioni)
 
             C_Metriche = MetricheCrossValidation(self.metriche_scelte)
-            metriche_fold = C_Metriche.calcolo_metriche(pd.Series(Y_test_folds[i]), previsioni)
+            metriche_fold = C_Metriche.calcolo_metriche(pd.Series(Y_test_folds[i]), previsioni, probabilita)
 
             for key, value in metriche_fold.items():
                 metriche_totali[key].append(value)
@@ -64,11 +67,14 @@ class Evaluation:
             Y_train = pd.Series(Y_train_folds[i])
 
             modello_knn.train(X_train, Y_train)
-            previsioni = modello_knn.predict_batch(pd.DataFrame(X_test_folds[i]))
+            previsioni = modello_knn.predict_batch(pd.DataFrame(X_test_folds[i])) 
+            
+            probabilita = modello_knn.predict_proba_batch(pd.DataFrame(X_test_folds[i])) 
+            
             y_pred_totale.append(previsioni[0])  # Un solo elemento per iterazione
 
             C_Metriche = MetricheCrossValidation(self.metriche_scelte)
-            metriche_loo = C_Metriche.calcolo_metriche(pd.Series(Y_test_folds[i]), previsioni)
+            metriche_loo = C_Metriche.calcolo_metriche(pd.Series(Y_test_folds[i]), previsioni, probabilita)
 
             for key, value in metriche_loo.items():
                 metriche_totali[key].append(value)
@@ -91,7 +97,10 @@ class Evaluation:
         modello_knn.train(X_train, Y_train)
         previsioni = modello_knn.predict_batch(X_test)
 
-        C_Metriche = MetricheCrossValidation(self.metriche_scelte)
-        metriche_holdout = C_Metriche.calcolo_metriche(Y_test, previsioni)
+        # Probabilità [0..1] della classe 1 (per AUC)
+        probabilita = modello_knn.predict_proba_batch(X_test)
 
-        return metriche_holdout, np.array(previsioni)  # Ora restituisce anche le previsioni!
+        C_Metriche = MetricheCrossValidation(self.metriche_scelte)
+        metriche_holdout = C_Metriche.calcolo_metriche(Y_test, previsioni, probabilita) #aggiunta di probabilita
+
+        return metriche_holdout, np.array(previsioni), Y_test  # Ora restituisce anche le previsioni!

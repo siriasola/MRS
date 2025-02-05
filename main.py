@@ -105,13 +105,74 @@ def choose_validation_strategy():
 
     return strategy, test_size, k_folds
 
+def choose_metriche():
+    """
+    Permette all'utente di selezionare le metriche da calcolare.
+    Se l'utente digita 'All the above', verranno selezionate tutte.
+    Altrimenti può inserire più metriche separate da virgola.
+    In caso di scelte non valide, vengono ignorate.
+    """
+    METRICHE_DISPONIBILI = [
+        "Accuracy Rate",
+        "Error Rate",
+        "Sensitivity",
+        "Specificity",
+        "Geometric Mean",
+        "AUC"
+    ]
+
+    print("\nQuali metriche vuoi calcolare?")
+    print("Scrivi 'All the above' per selezionarle tutte, oppure ")
+    print("inserisci più metriche separate da virgola. Esempio: 'Accuracy Rate, Sensitivity'")
+    print(f"Metriche disponibili: {', '.join(METRICHE_DISPONIBILI)}")
+
+    user_input = input("La tua scelta: ").strip()
+
+    # Se l'utente scrive 'All the above' (maiuscolo, minuscolo, ecc.)
+    if user_input.lower() == "all the above":
+        return METRICHE_DISPONIBILI
+
+    # Altrimenti, split in base alla virgola
+    scelte = [m.strip() for m in user_input.split(",")]
+
+    metriche_valide = []
+    for m in scelte:
+        if m in METRICHE_DISPONIBILI:
+            metriche_valide.append(m)
+        else:
+            print(f"Attenzione: '{m}' non è tra le metriche disponibili, la ignoro.")
+
+    # Se l'utente non ha scelto metriche valide, impostiamo un fallback di default
+    if not metriche_valide:
+        print("Nessuna metrica valida selezionata, userò 'Accuracy Rate' come default.")
+        metriche_valide = ["Accuracy Rate"]
+
+    return metriche_valide
+
+
 def evaluate_model(features, target, strategy, test_size, k_folds):
     """Esegue la validazione e stampa i risultati."""
-    metriche_scelte = ["Accuracy Rate", "Error Rate", "Sensitivity", "Specificity", "Geometric Mean"]
+    metriche_scelte = choose_metriche()
     k = int(input("Inserisci il valore di k per il KNN (default 3): ").strip() or 3)
 
     evaluation = Evaluation(features, target, k_folds=k_folds, metriche_scelte=metriche_scelte, k=k)
 
+    if strategy == "holdout":
+        metrics_result, y_pred, y_test_holdout = evaluation.valutazione_holdout(train_size=test_size)
+        # Restituisco y_test_holdout al posto di target!
+        return y_test_holdout, y_pred
+    
+    elif strategy == "k_fold":
+        metrics_result, y_pred = evaluation.valutazione_k_fold()
+        # In k-fold y_pred è lungo quanto l'intero target, quindi lì puoi ritornare l’originale
+        return target, y_pred
+
+    elif strategy == "leave_one_out":
+        metrics_result, y_pred = evaluation.valutazione_leave_one_out()
+        return target, y_pred
+
+
+    """
     if strategy == "holdout":
         metrics_result, y_pred = evaluation.valutazione_holdout(train_size=test_size)
     elif strategy == "k_fold":
@@ -119,12 +180,16 @@ def evaluate_model(features, target, strategy, test_size, k_folds):
     elif strategy == "leave_one_out":
         metrics_result, y_pred = evaluation.valutazione_leave_one_out()
 
-    print("\nRisultati della validazione:")
+    print("\nRisultati della validazione:")"""
     for metrica, valore in metrics_result.items():
-        print(f"{metrica}: {valore:.4f}")
+        # Nel caso l'AUC non possa essere calcolato (mancano le probabilità) potresti avere None
+        if valore is not None:
+            print(f"{metrica}: {valore:.4f}")
+        else:
+            print(f"{metrica}: N/A")
 
     return target, y_pred
-
+    
 
 def visualize_results(target, y_pred):
     """Genera la matrice di confusione e la curva ROC."""
@@ -149,8 +214,8 @@ def main():
     features, target = split_features_target(df)
     strategy, test_size, k_folds = choose_validation_strategy()
 
-    target, y_pred = evaluate_model(features, target, strategy, test_size, k_folds)
-    visualize_results(target, y_pred)
+    y_test, y_pred = evaluate_model(features, target, strategy, test_size, k_folds)
+    visualize_results(y_test, y_pred)
 
 
 if __name__ == "__main__":

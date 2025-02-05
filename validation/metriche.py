@@ -13,12 +13,20 @@ class MetricheCrossValidation:
         """
         self.metriche_scelte = metriche_scelte
 
-    def calcolo_metriche(self, y_test: pd.Series, previsioni: pd.Series) -> dict:
+    def calcolo_metriche(self, y_test: pd.Series, previsioni: pd.Series, probabilita: pd.Series=None) -> dict:
+        """
+        Calcola le metriche richieste in self.metriche_scelte.
+        - y_test: Serie dei valori veri
+        - previsioni: Serie dei valori predetti (0/1)
+        - probabilita: Serie delle 'probabilità' di classe 1 (se disponibile)
+        """
+
 
         #print(">>> calcolo_metriche è stato chiamato!")  # Stampa di debug
 
-       #print("Distribuzione y_test:", np.unique(y_test, return_counts=True))
+        #print("Distribuzione y_test:", np.unique(y_test, return_counts=True))
         #print("Distribuzione previsioni:", np.unique(previsioni, return_counts=True))
+
         """
         Calcola le metriche per una singola iterazione.
 
@@ -57,7 +65,40 @@ class MetricheCrossValidation:
             
             metriche['Geometric Mean'] = np.sqrt(sensitivity * specificity)
 
+        if 'AUC' in self.metriche_scelte:
+            if probabilita is None:
+                # Se non abbiamo la probabilità, non possiamo calcolare l'AUC.
+                metriche['AUC'] = None
+            else:
+                metriche['AUC'] = self.calcolo_auc(y_test, probabilita)
+
         return metriche
+    
+    def calcolo_auc(self, y_true: pd.Series, y_prob: pd.Series) -> float:
+        """
+        Calcola l'Area Under the ROC Curve (AUC) basandosi sulle probabilità di classe 1.
+        """
+        # Ordiniamo le soglie dal più alto al più basso
+        soglie = np.sort(y_prob)[::-1]
+        tpr = []
+        fpr = []
+        
+        n_positivi = np.sum(y_true == 1)
+        n_negativi = np.sum(y_true == 0)
+
+        # Per ogni soglia, costruiamo una predizione binaria e calcoliamo TPR e FPR
+        for soglia in soglie:
+            y_pred_temp = (y_prob >= soglia).astype(int)
+            vp = np.sum((y_pred_temp == 1) & (y_true == 1))
+            fp = np.sum((y_pred_temp == 1) & (y_true == 0))
+
+            tpr.append(vp / n_positivi if n_positivi > 0 else 0.0)
+            fpr.append(fp / n_negativi if n_negativi > 0 else 0.0)
+
+        # Calcolo dell'area con la formula del trapezio
+        auc_value = np.trapz(tpr, fpr)
+        return auc_value
+
 
     def holdout_validation_metrics(self,model, X_train, X_test, Y_train, Y_test) -> dict:
         """

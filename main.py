@@ -120,6 +120,8 @@ def choose_metriche():
         "Geometric Mean",
         "AUC"
     ]
+    # Creo un dizionario con chiave = versione minuscola, valore = metrica originale
+    metriche_mapping = {m.lower(): m for m in METRICHE_DISPONIBILI}
 
     print("\nQuali metriche vuoi calcolare?")
     print("Scrivi 'All the above' per selezionarle tutte, oppure ")
@@ -136,9 +138,13 @@ def choose_metriche():
     scelte = [m.strip() for m in user_input.split(",")]
 
     metriche_valide = []
+
     for m in scelte:
-        if m in METRICHE_DISPONIBILI:
-            metriche_valide.append(m)
+        # Verifico nella mappa se esiste la versione minuscola
+        if m.lower() in metriche_mapping:
+            # Recupero la metrica con la formattazione originale
+            metrica_originale = metriche_mapping[m.lower()]
+            metriche_valide.append(metrica_originale)
         else:
             print(f"Attenzione: '{m}' non è tra le metriche disponibili, la ignoro.")
 

@@ -1,4 +1,3 @@
-
 import pandas as pd
 
 class DataCleaner:
@@ -6,7 +5,7 @@ class DataCleaner:
     Classe per la pulizia del dataset: rimuove duplicati e righe con target mancante.
     """
 
-    def __init__(self, target_column):
+    def __init__(self, target_column="Target"):  # Imposta "Target" come valore predefinito
         self.target_column = target_column
 
     def clean(self, df):
@@ -20,12 +19,18 @@ class DataCleaner:
         pd.DataFrame - Dataset pulito
         """
         df = df.drop_duplicates()
-        df = df.dropna(subset=[self.target_column])  # Elimina righe senza il target
+        if self.target_column in df.columns:
+            df = df.dropna(subset=[self.target_column])  # Elimina righe senza il target
+        else:
+            raise KeyError(f"La colonna target '{self.target_column}' non esiste nel dataset.")
+        
         print("Dataset pulito: duplicati rimossi e target senza valore eliminato.")
         
-        df= df.apply(pd.to_numeric, errors='coerce') #stringhe diventano Nan
+        df = df.apply(pd.to_numeric, errors='coerce')  # Converte stringhe in NaN
 
         print("Valori NaN dopo conversione numerica:\n", df.isna().sum())
+        df = df.dropna()  # Rimuove tutte le righe con almeno un valore NaN
+
         return df
 
 
@@ -53,12 +58,12 @@ class MissingValueHandler:
         """
         for col in df.select_dtypes(include=["number"]).columns:
             if self.method == "mean":
-                df[col].fillna(df[col].dropna().mean(), inplace=True)
+                df[col] = df[col].fillna(df[col].dropna().mean())
             elif self.method == "median":
-                df[col].fillna(df[col].dropna().median(), inplace=True)
+                df[col] = df[col].fillna(df[col].dropna().median())
             elif self.method == "mode":
                 mode_value = df[col].dropna().mode()
-                df[col].fillna(mode_value.iloc[0] if not mode_value.empty else df[col].dropna().median(), inplace=True)
+                df[col] = df[col].fillna(mode_value.iloc[0] if not mode_value.empty else df[col].dropna().median())
 
         print(f"Valori mancanti riempiti con {self.method}.")
         return df

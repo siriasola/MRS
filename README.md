@@ -65,6 +65,7 @@ Grazie a queste funzionalità, il progetto si pone come un valido strumento di s
 
  ### Struttura del Progetto ###
  La struttura delle cartelle e dei file principali è la seguente:
+
 ├── data
 │   └── version_1.csv
 │
@@ -92,7 +93,7 @@ Grazie a queste funzionalità, il progetto si pone come un valido strumento di s
 │   └── visualizzazione.py
 │
 └── main.py
-## Descrizione delle Cartelle ##
+### Descrizione delle Cartelle ###
 - **data/**: Contiene il file version_1.csv (dataset di esempio).
 - **models/**: Contiene i modelli di Machine Learning (in questo caso k_nearest_neighbor.py).
 - **preprocessing/**: Contiene gli script per caricare i dati e applicare operazioni di pulizia, gestione dei valori mancanti e scaling.
@@ -103,7 +104,7 @@ Grazie a queste funzionalità, il progetto si pone come un valido strumento di s
 ## **1. Caricamento del DataSet**  
 Nel file ```preprocessing/importdata.py``` è definita la classe ```DatasetProcessor``` che, attraverso il metodo ```load_data()```, rileva automaticamente l’estensione del file e carica i dati in un oggetto ```pandas.DataFrame```.
 
-# Flusso di Caricamento: #
+### Flusso di Caricamento: ###
 
 1. L’utente digita (o conferma) il percorso del file quando richiesto dal programma.
 2. In base all’estensione (```.csv```, ```.xls```, ```.xlsx```, ```.json```, ```.tsv```, ```.txt```), il metodo ```load_data()``` applica la funzione di lettura corrispondente di ```pandas```.
@@ -124,13 +125,13 @@ Queste operazioni assicurano che il dataset sia privo di duplicati e che le righ
 ## **3. Configurazione Interattiva** 
 Dopo aver caricato il dataset, l’utente può interagire con il programma per specificare le tecniche di **pulizia** e **scaling**.
 
-# **3.1 Gestione dei Valori Mancanti**  
+### **3.1 Gestione dei Valori Mancanti**  
 All’interno del flusso di ```main.py```, la funzione ```handle_missing_values(df)``` invoca:
 - ```choose_missing_value_method()```: chiede all’utente di scegliere il metodo fra ```mean```, ```median``` e ```mode```.
 - Crea quindi un oggetto ```MissingValueHandler``` con il metodo prescelto.
 - Applica ```MissingValueHandler.clean(df)``` per riempire i valori mancanti.
 
-# **3.2 Scaling delle Feature** 
+### **3.2 Scaling delle Feature** 
 Nel file ```preprocessing/normalizzazione.py``` è presente la classe ```FeatureScaler```. Le opzioni di scaling offerte sono:
 - **Normalizzazione**: Trasforma le feature in un range [0, 1].
 - **Standardizzazione**: Trasforma le feature in modo che abbiano media = 0 e deviazione standard = 1.

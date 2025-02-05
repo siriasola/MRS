@@ -66,6 +66,7 @@ Grazie a queste funzionalità, il progetto si pone come un valido strumento di s
  ### Struttura del Progetto ###
  La struttura delle cartelle e dei file principali è la seguente:
 
+```
 ├── data
 │   └── version_1.csv
 │
@@ -93,6 +94,8 @@ Grazie a queste funzionalità, il progetto si pone come un valido strumento di s
 │   └── visualizzazione.py
 │
 └── main.py
+```
+
 ### Descrizione delle Cartelle ###
 - **data/**: Contiene il file version_1.csv (dataset di esempio).
 - **models/**: Contiene i modelli di Machine Learning (in questo caso k_nearest_neighbor.py).

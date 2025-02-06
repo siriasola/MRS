@@ -27,37 +27,34 @@ Il dataset version_1.csv svolge un ruolo centrale in questo progetto, fornendo i
 - Uniformity of Cell Shape: Uniformità della forma delle cellule, importante per identificare alterazioni morfologiche.
 - Bare Nucleix_wrong: Nuclei scoperti (probabilmente un errore di digitazione, riferito a “Bare Nuclei”).
 
-### **Metodologia**  
-Per garantire una valutazione affidabile del modello, verranno applicate diverse tecniche di validazione, tra cui:  
-- **Holdout** 
-- **K-Fold Cross Validation**  
-- **Leave-One-Out Cross Validation (LOO-CV)**  
+## Personalizzazione e Analisi dei Risultati
 
-Il modello di machine learning principale utilizzato è il **k-Nearest Neighbors (k-NN)**, un classificatore basato sulla similarità tra campioni. Tuttavia, il codice è strutturato in modo flessibile, consentendo di integrare e testare altri algoritmi.  
+Il programma offre un elevato grado di personalizzazione, permettendo agli utenti di:
 
-### **Personalizzazione e Analisi dei Risultati**  
-Il programma offre un elevato grado di personalizzazione, permettendo agli utenti di:  
-- Scegliere la strategia di validazione  
-- Configurare il pre-processing dei dati  
-- Analizzare le prestazioni del modello attraverso metriche dettagliate  
+- Configurare il pre-processing dei dati.
+- Scegliere la strategia di validazione.
+- Analizzare le prestazioni del modello attraverso metriche dettagliate.
 
-I risultati vengono presentati in due modalità:  
-1. **Esportazione dei dati** in formato CSV per un'analisi approfondita  
-2. **Visualizzazione grafica**, con Confusion Matrix e Curva ROC per un’interpretazione immediata delle prestazioni del modello  
+### Modalità di Presentazione dei Risultati
 
-Grazie a queste funzionalità, il progetto si pone come un valido strumento di supporto per lo studio e la diagnosi dei tumori al seno, sfruttando il machine learning per migliorare la classificazione delle cellule tumorali. 
+I risultati vengono presentati in due modalità:
 
-### Come Eseguire il Codice ###
-1. **Clonare o Scaricare il Repository**  
-   Scaricare l’intero progetto, contenente le cartelle `data`, `models`, `preprocessing`, `tests`, `validation` e il file `main.py`.
+1. **Esportazione dei dati** in formato **Excel**, per un'analisi approfondita.
+2. **Visualizzazione grafica**, con **Confusion Matrix** e **Curva ROC**, per un’interpretazione immediata delle prestazioni del modello.
 
-2. **Installare le Dipendenze**  
-   Assicurarsi di avere installato Python (versione 3.7 o superiore) e installare le librerie necessarie elencate nel file `requirements.txt` (se presente). In caso contrario, le librerie di base utilizzate sono:  
-   ```bash
-   pip install pandas numpy matplotlib
-   ```
-3. **Eseguire lo Script Principale** 
-    Dal terminale, posizionarsi nella cartella radice del progetto e lanciare il comando:
+Grazie a queste funzionalità, il progetto si pone come un valido strumento di supporto per lo studio e la diagnosi dei tumori al seno, sfruttando il **Machine Learning** per migliorare la classificazione delle cellule tumorali.
+
+### Come Eseguire il Codice ##
+1. **Installare le Dipendenze:**
+Prima di eseguire il programma, è necessario assicurarsi di avere **Python 3.7** o superiore installato nel sistema e installare le dipendenze. Questo può essere fatto eseguendo il comando nella directory principale del progetto:
+
+```bash
+pip install -r requirements.txt
+```
+2. **Eseguire lo Script Principale:** 
+    Dal terminale, spostarsi nella cartella del progetto ed eseguire:
+
+    Windows
     ```
     python main.py 
     ```
@@ -65,153 +62,212 @@ Grazie a queste funzionalità, il progetto si pone come un valido strumento di s
     ```
     python3 main.py
     ```
-4. **Interagire con il Programma** 
-    Il programma è interattivo: chiederà all’utente di specificare:
-    - Il percorso del dataset (default: ```data\version_1.csv ```)
-    - Il metodo di gestione dei valori mancanti (media, moda, mediana)
-    - Il metodo di scaling delle feature 
-    - La strategia di validazione (Holdout, K-Fold Cross Validation, Leave-One-Out Cross Validation)
-    - Il valore *k* per il k-NN
-    Al termine, verranno mostrati i risultati a schermo e verranno generate eventuali visualizzazioni (Confusion Matrix, Curva ROC).
+3. **Interagire con il Programma:** 
+Il programma è interattivo, chiederà all’utente di specificare:
 
-### Formati Supportati ###
- Il progetto è stato pensato per essere generalizzabile a diversi formati di file, oltre a ```CSV```. In particolare: 
- - CSV (```.csv```)
- - Excel (```.xlsx, .xls```)
- - JSON (```.json```)
- - TSV (```.tsv```)
- - TXT (testo tabellato)
- Nel file ```preprocessing/importdata.py``` viene determinato il tipo di file in base all’estensione del percorso specificato e viene eseguito il caricamento appropriato usando pandas.
+- **Il percorso del dataset**
+- **Il metodo di gestione dei valori mancanti** (Media, Moda, Mediana)
+- **Il metodo di scaling delle feature** (Normalizzazione, Standardizzazione)
+- **La strategia di validazione**  
+  - Holdout  
+  - K-Fold Cross Validation  
+  - Leave-One-Out Cross Validation  
+- **La selezione delle metriche di valutazione**  
+  - Accuracy Rate  
+  - Sensitivity  
+  - AUC  
+  - e altre metriche disponibili...  
+- **Il valore di _k_ per il k-NN**
 
- ### Struttura del Progetto ###
- La struttura delle cartelle e dei file principali è la seguente:
+Al termine, verranno mostrati i risultati a schermo e verranno generate eventuali visualizzazioni, tra cui:
 
-```
-├── data
-│   └── version_1.csv
-│
-├── models
-│   ├── __init__.py
-│   └── k_nearest_neighbor.py
-│
-├── preprocessing
-│   ├── __init__.py
-│   ├── data_cleaner.py
-│   ├── importdata.py
-│   └── normalizzazione.py
-│
-├── tests
-│   ├── __init__.py
-│   ├── test_data.py
-│   ├── test_evaluation.py
-│   └── test_knn.py
-│
-├── validation
-│   ├── __init__.py
-│   ├── datasplit.py
-│   ├── evaluation.py
-│   ├── metriche.py
-│   └── visualizzazione.py
-│
-└── main.py
-```
+- **Confusion Matrix**
+- **Curva ROC**
 
-### Descrizione delle Cartelle ###
-- **data/**: Contiene il file version_1.csv (dataset di esempio).
-- **models/**: Contiene i modelli di Machine Learning (in questo caso k_nearest_neighbor.py).
-- **preprocessing/**: Contiene gli script per caricare i dati e applicare operazioni di pulizia, gestione dei valori mancanti e scaling.
-- **tests/**: Contiene i test automatici per la validazione delle funzionalità del codice.
-- **validation/**: Contiene gli script per la suddivisione del dataset (holdout, k-fold, leave-one-out), il calcolo delle metriche e la visualizzazione dei risultati.
-- **main.py**: File principale che coordina l’esecuzione di tutti i moduli e fornisce un’interfaccia interattiva all’utente.
+### Formati supportati ##
 
-## **1. Caricamento del DataSet**  
-Nel file ```preprocessing/importdata.py``` è definita la classe ```DatasetProcessor``` che, attraverso il metodo ```load_data()```, rileva automaticamente l’estensione del file e carica i dati in un oggetto ```pandas.DataFrame```.
+Il programma è stato progettato per analizzare dataset provenienti da diversi formati di file.  
+Per garantire il corretto funzionamento, il file deve essere in uno dei seguenti formati:
 
-### Flusso di Caricamento: ###
+- **.csv** (valori separati da virgola)
+- **.xlsx** (Excel)
+- **.json** (formato JSON)
+- **.txt** (con delimitatore `,`)
+- **.tsv** (con delimitatore `\t`)
 
-1. L’utente digita (o conferma) il percorso del file quando richiesto dal programma.
-2. In base all’estensione (```.csv```, ```.xls```, ```.xlsx```, ```.json```, ```.tsv```, ```.txt```), il metodo ```load_data()``` applica la funzione di lettura corrispondente di ```pandas```.
-3. Se il caricamento ha successo, viene restituito un ```DataFrame```, altrimenti ```None```.
+Se il formato del file non è tra quelli supportati, verrà generato un errore e il programma interromperà l’elaborazione.
 
-## **2. Pulizia del DataSet**  
-Nel file ```preprocessing/data_cleaner.py``` troviamo due classi principali:
+---
 
-1. ```DataCleaner```
-   - Rimuove i duplicati con ```df.drop_duplicates()```.
-   - Rimuove le righe che non hanno il valore di target, specificato tramite il parametro ```target_column```.
-2. ```MissingValueHandler```
-   - Gestisce i **valori mancanti** all’interno delle colonne numeriche.
-   - L’utente può scegliere fra 3 strategie: **mean**, **median**, **mode**.
-   - Se la scelta non è valida, viene usato di default il metodo della media.
-Queste operazioni assicurano che il dataset sia privo di duplicati e che le righe senza target vengano rimosse, per evitare inconsistenze nella fase di addestramento. Successivamente, i valori mancanti nelle feature numeriche vengono riempiti con la strategia scelta, in modo da ridurre l’impatto di dati incompleti.
+### 1. Caricamento del Dataset  
 
-## **3. Configurazione Interattiva** 
-Dopo aver caricato il dataset, l’utente può interagire con il programma per specificare le tecniche di **pulizia** e **scaling**.
+Durante l’esecuzione del programma, l’utente deve fornire il percorso del file contenente il dataset.  
+Se il percorso non viene specificato o il file non è valido, il programma restituirà il seguente messaggio di errore:
 
-### **3.1 Gestione dei Valori Mancanti**  
-All’interno del flusso di ```main.py```, la funzione ```handle_missing_values(df)``` invoca:
-- ```choose_missing_value_method()```: chiede all’utente di scegliere il metodo fra ```mean```, ```median``` e ```mode```.
-- Crea quindi un oggetto ```MissingValueHandler``` con il metodo prescelto.
-- Applica ```MissingValueHandler.clean(df)``` per riempire i valori mancanti.
+> **"Errore nel caricamento del file:"**
 
-### **3.2 Scaling delle Feature** 
-Nel file ```preprocessing/normalizzazione.py``` è presente la classe ```FeatureScaler```. Le opzioni di scaling offerte sono:
-- **Normalizzazione**: Trasforma le feature in un range [0, 1].
-- **Standardizzazione**: Trasforma le feature in modo che abbiano media = 0 e deviazione standard = 1.
-Anche in questo caso, ```main.py``` fornisce una funzione (```scale_features(df)```) che chiede all’utente di scegliere la tecnica desiderata e poi applica la trasformazione corrispondente.
+Se il file viene caricato correttamente, il dataset sarà pronto per essere elaborato nelle fasi successive.
 
-## **4. Classificazione: k-NN** 
-Il **k-Nearest Neighbors (k-NN)** è un algoritmo di Machine Learning basato sulla similarità dei campioni.
+---
 
-Nel file ```models/k_nearest_neighbor.py``` è definita una classe (```ClassificatoreKNN```) che contiene:
+### 2. Pulizia del Dataset  
 
-- ```__init__(self, k=5)```: Il costruttore, dove k è il numero di vicini da considerare.
-- ```train(self, features, labels)```: Salva internamente i dati di training, senza vera fase di addestramento (k-NN è un metodo basato sulla memoria).
-- ```Euclidian_distance(self, point)```: Calcola la distanza euclidea tra point e tutti i campioni di training.
-- ```k_nearest_neighbor(self, point)```: Trova i k punti più vicini a quello specificato.
-- ```predict(self, point)```: Restituisce la classe del punto in input.
-- ```predict_batch(self, points)```: Applica la previsione a un insieme di punti (batch).
+Dopo il caricamento dei dati, viene eseguita un’operazione di pulizia per garantire la qualità del dataset.  
+Questa fase include:
 
-## **5. Validazione del Modello** 
-All’interno della cartella ```validation/```:
-1. ```datasplit.py```
-   - Suddivide il dataset in **training** e **test** (metodo ```split_holdout(train_size)```).
-   - Esegue la **K-Fold Cross Validation** suddividendo i dati in k fold.
-   - Esegue la **Leave-One-Out Cross Validation (LOO-CV)**, in cui a ogni iterazione viene utilizzato 1 singolo campione come test.
-2. ```evaluation.py```
-   - Coordina l’intero processo di validazione, richiamando le funzioni di split e i calcoli delle metriche.
-   - Metodi principali:
-      - ```valutazione_holdout(self, train_size=0.8)```
-      - ```valutazione_k_fold(self)```
-      - ```valutazione_leave_one_out(self)```
-L’utente, durante l’esecuzione di ```main.py```, sceglie la strategia di validazione preferita (Holdout, K-Fold, Leave-One-Out). In base a questa scelta, vengono chiamati i metodi corrispondenti di datasplit ed evaluation.
+1. **Rimozione dei duplicati**: vengono eliminati eventuali record duplicati nel dataset.  
+2. **Gestione dei valori mancanti**: le righe prive di un valore nella colonna `classtype_v1` (la variabile target) vengono eliminate.  
+3. **Riempimento dei valori mancanti**: l’utente può scegliere come trattare i dati mancanti nelle altre colonne, selezionando una delle seguenti opzioni:
+   - **Media (Mean)**: sostituisce i valori mancanti con la media della colonna.  
+   - **Mediana (Median)**: sostituisce i valori mancanti con la mediana della colonna (**opzione predefinita**).  
+   - **Moda (Mode)**: sostituisce i valori mancanti con il valore più frequente.  
 
-## **6. Metriche** 
-Nel file ```validation/metriche.py``` troviamo la classe (```MetricheCrossValidation```) e le funzioni correlate, che calcolano le seguenti metriche:
-- **Accuracy Rate**
-- **Error Rate**
-- **Sensitivity** 
-- **Specificity**
-- **Geometric Mean**
-- **Area Under the Curve**
+   Se l’utente non specifica una scelta valida, il programma utilizza automaticamente la **media**.
 
-*Oltre ai metodi di calcolo, troviamo funzioni per:*
+---
 
-*Validazione Holdout*
-*K-Fold Cross Validation*
-*Leave-One-Out Cross Validation*
-*e metodi per plot e salvataggio CSV delle metriche aggregate.*
+### 3. Scaling delle Feature  
 
-## **7. Visualizzazione e Salvataggio dei Risultati** 
+Per migliorare le prestazioni degli algoritmi di apprendimento automatico, il dataset viene sottoposto a un processo di trasformazione delle feature numeriche.  
+L’utente può scegliere tra due tecniche di scaling:
 
+1. **Normalizzazione (Min-Max Scaling)**: ridimensiona i valori delle feature in un intervallo compreso tra **0 e 1**.  
+2. **Standardizzazione (Z-score Scaling)**: trasforma i valori affinché abbiano **media 0 e deviazione standard 1**.  
 
-## **8. Conclusioni** 
-Questo progetto fornisce una base solida per affrontare la classificazione di tumori al seno (o di altre tipologie di dataset con struttura simile) utilizzando il k-NN. La pipeline copre l’intero flusso di lavoro:
+Per garantire un’elaborazione corretta, alcune colonne del dataset **non** vengono modificate durante questa fase:
 
-1. Caricamento dei dati da formati diversi.
-2. Pulizia (rimozione duplicati, gestione valori mancanti).
-3. Scaling delle feature.
-4. Scelta della strategia di validazione (Holdout, K-Fold, Leave-One-Out).
-5. Addestramento e Predizione con k-NN.
-6. Calcolo delle Metriche (Accuracy, Sensitivity, Specificity, ecc.).
-7.Visualizzazione (Confusion Matrix, Curva ROC) e Salvataggio dei risultati.
+- **classtype_v1**: rappresenta la colonna target, che indica la classe del tumore (**benigno** o **maligno**).  
+- **Sample code number**: è un identificativo univoco per ogni campione e **non** ha rilevanza nel processo di scaling.  
+
+Se l’utente non specifica una scelta valida, il programma utilizzerà la **normalizzazione (Min-Max Scaling)** come impostazione predefinita.
+## 4. Classificazione: k-NN
+
+Il **k-Nearest Neighbors (k-NN)** è un algoritmo di Machine Learning supervisionato utilizzato per la classificazione dei dati in base alla somiglianza con i campioni già noti.  
+Nel contesto di questo progetto, il k-NN viene impiegato per classificare i tumori come **benigni** o **maligni**, confrontando ogni nuovo campione con i dati presenti nel dataset di training.
+
+L’algoritmo si basa su tre passaggi fondamentali:
+
+1. **Calcolo della distanza** tra il nuovo campione e tutti i campioni presenti nel dataset.  
+2. **Selezione dei k vicini più prossimi**, ovvero i campioni più simili in base alla distanza calcolata.  
+3. **Assegnazione della classe** al nuovo campione in base alla classe predominante tra i vicini.
+
+---
+
+### 4.1 Funzionamento  
+
+Il classificatore k-NN è stato implementato per gestire in modo efficiente il processo di classificazione.  
+Le principali fasi dell’algoritmo sono le seguenti:
+
+- **Fase di Addestramento:**  
+  In questa fase, i dati vengono **memorizzati** all’interno del modello, senza eseguire una vera e propria fase di apprendimento.  
+  I dati di training includono le feature (le caratteristiche dei campioni) e le rispettive etichette di classe.
+
+- **Calcolo della Distanza:**  
+  Per determinare la similarità tra i campioni, viene utilizzata una misura di distanza.  
+  Nel progetto, la **distanza Euclidea** è il metodo scelto per confrontare i campioni, valutando quanto un punto sia vicino o lontano dagli altri nel dataset.
+
+- **Identificazione dei k Vicini più Vicini:**  
+  Dopo aver calcolato la distanza tra il nuovo campione e tutti i campioni di training, l’algoritmo seleziona i **k campioni più vicini**.  
+  La scelta di **k** è un parametro determinante e può influenzare la qualità della classificazione.
+
+- **Assegnazione della Classe:**  
+  Il nuovo campione viene assegnato alla classe più frequente tra i suoi **k vicini**.  
+  Se vi è un pareggio tra due o più classi, il sistema risolve la situazione scegliendo **casualmente** tra le classi con la stessa frequenza.
+
+- **Predizione per un Singolo Campione o per più Campioni:**  
+  Il classificatore permette di effettuare previsioni **sia su un singolo campione** sia **su più campioni contemporaneamente**.
+
+- **Probabilità di Appartenenza a una Classe:**  
+  Oltre a fornire la classe finale, il modello può calcolare la **probabilità** che un dato campione appartenga a una specifica classe.  
+  Questa probabilità è determinata dalla proporzione di vicini appartenenti alla classe di interesse.
+
+---
+
+### 4.2 Gestione delle Situazioni  
+
+- **Dati Mancanti:**  
+  Il modello verifica la presenza di eventuali valori mancanti e **li rimuove** prima di effettuare la classificazione per evitare errori nei calcoli.
+
+- **Scelta di k:**  
+  Il valore di **k** deve essere scelto con attenzione:  
+  - Un valore **troppo basso** può rendere il modello sensibile al rumore nei dati.  
+  - Un valore **troppo alto** può portare a una classificazione troppo generalizzata.
+
+- **Pareggio tra Classi:**  
+  Se tra i **k vicini** ci sono più classi con la stessa frequenza, il modello **sceglie casualmente** tra le classi con il numero maggiore di occorrenze.
+
+---
+
+## 5. Validazione del Modello  
+
+Per garantire l’affidabilità delle previsioni del modello k-NN, il progetto implementa diverse tecniche di validazione dei dati.  
+L’obiettivo della validazione è **valutare le prestazioni del modello su dati non visti**, ridurre il rischio di **overfitting** e confrontare le metriche di valutazione in scenari differenti.
+
+---
+
+### 5.1 Suddivisione dei Dati  
+
+Il file **datasplit.py** si occupa di suddividere il dataset in insiemi di **training** e **test**, utilizzando tre diverse strategie di validazione:
+
+- **Holdout Validation:**  
+  Il modello KNN viene addestrato con l’**80% dei dati** e testato sul restante **20%**.  
+  Si ottiene un valore per ciascuna metrica di valutazione (**es. accuratezza, sensibilità, specificità**), che indica le prestazioni del modello.
+
+- **K-Fold Cross Validation:**  
+  Il modello viene **addestrato e testato k volte**, e alla fine si ottiene una **media** delle metriche di valutazione.  
+  Questo fornisce una **stima più affidabile** della performance rispetto all’Holdout, poiché ogni dato viene usato **sia per il training che per il testing**.
+
+- **Leave-One-Out Cross Validation (LOO-CV):**  
+  Il modello viene testato una volta per **ogni campione**, il che fornisce una **valutazione estremamente accurata**, soprattutto su dataset di **piccole dimensioni**.  
+  Tuttavia, il **costo computazionale** è molto elevato, poiché il modello viene addestrato **N volte**, dove **N è il numero totale di dati nel dataset**.
+
+---
+
+## 6. Metriche  
+
+Durante la fase di validazione del modello, vengono misurate diverse metriche per valutare l’efficacia del classificatore k-NN.  
+Questi indicatori permettono di analizzare la **precisione delle previsioni** e la capacità del modello di distinguere correttamente tra le diverse classi.
+
+Le metriche vengono calcolate per ciascuna delle strategie di validazione adottate, fornendo una valutazione **completa** delle prestazioni del modello.
+
+Di seguito sono riportate le metriche calcolate dal nostro sistema:
+
+- **Accuracy Rate:** Percentuale di predizioni corrette sul totale dei campioni. Indica la precisione generale del modello. **Valore ideale: vicino a 1**.  
+- **Error Rate:** Percentuale di predizioni errate sul totale. Più basso è il valore, migliore è la performance del modello. **Valore ideale: vicino a 0**.  
+- **Sensitivity:** Misura la capacità del modello di individuare correttamente i **casi positivi** (**tumori maligni**). **Valore ideale: vicino a 1**.  
+- **Specificity:** Misura la capacità del modello di identificare correttamente i **casi negativi** (**tumori benigni**). **Valore ideale: vicino a 1**.  
+- **Geometric Mean:** Indica il bilanciamento tra **Sensitivity** e **Specificity**, utile in dataset sbilanciati. **Valore ideale: vicino a 1**.  
+- **Area Under the Curve:** Rappresenta la capacità del modello di distinguere tra **classi positive e negative**.  
+  Un valore vicino a **1** indica un’**elevata capacità discriminativa**.
+
+---
+
+## 7. Visualizzazione e Salvataggio dei Risultati  
+
+Le metriche calcolate vengono archiviate in un file **Excel** denominato **validation_results.xlsx** all’interno della cartella **results/**.  
+Questo permette di consultare facilmente le prestazioni del modello e confrontare diversi esperimenti.
+
+Oltre ai dati numerici, il programma genera **visualizzazioni** che aiutano a interpretare meglio i risultati del modello.  
+Tra questi troviamo:
+
+- **Matrice di Confusione:** Un’analisi dettagliata degli errori di classificazione.  
+- **Curva ROC:** Mostra le performance del modello in termini di **sensibilità e specificità**.  
+- **Grafico a Barre delle Metriche:** Un confronto visivo tra le metriche di valutazione per evidenziare i punti di forza e debolezza del modello.
+
+Tutti i grafici vengono salvati come immagini nella cartella **results/** e successivamente **integrati nel file Excel**, ognuno in un **foglio separato**, per facilitare la consultazione.
+
+---
+
+## 8. Conclusioni  
+
+Questo progetto fornisce una base solida per affrontare la classificazione di **tumori al seno** (o di altre tipologie di dataset con struttura simile) utilizzando il **k-NN**.  
+La pipeline copre l’intero flusso di lavoro:
+
+- **Caricamento dei dati** da formati diversi.  
+- **Pulizia** (rimozione duplicati, gestione valori mancanti).  
+- **Scaling delle feature**.  
+- **Scelta della strategia di validazione** (Holdout, K-Fold, Leave-One-Out).  
+- **Addestramento e Predizione con k-NN**.  
+- **Calcolo delle Metriche** (Accuracy, Sensitivity, Specificity, ecc.).  
+- **Visualizzazione** (Confusion Matrix, Curva ROC).  
+- **Salvataggio dei risultati**.

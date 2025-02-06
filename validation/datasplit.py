@@ -19,37 +19,45 @@ class SplitData:
         """
         Divide i dati in training e test set secondo la proporzione specificata.
         """
-        n = len(self.features)
-        indices = np.arange(n)
-        np.random.shuffle(indices)
-        train_end = int(n * train_size)
+        n = len(self.features) #dimensione totale del dataset
+        indices = np.arange(n) #crea array di indici da 0 a n-1
+        np.random.shuffle(indices) #mescola casualmente gli indici per evitare bias nella divisione
+        train_end = int(n * train_size) #calcola il numero di elementi da assegnare al training set in base al trai_size 
         
-        train_indices = indices[:train_end]
-        test_indices = indices[train_end:]
+        train_indices = indices[:train_end] #contiene i primi indici per il training set 
+        test_indices = indices[train_end:] #contiene gli indici rimanenti per il test set
         
+        """Suddivisione dellle features e target in base agli indici generati"""
+
         X_train, X_test = self.features.iloc[train_indices], self.features.iloc[test_indices]
         Y_train, Y_test = self.target.iloc[train_indices], self.target.iloc[test_indices]
         
         return X_train, X_test, Y_train, Y_test
    
     def split_k_fold(self):
-        n = len(self.features)
-        indices = np.arange(n)
-        np.random.shuffle(indices)
-        fold_size = n // self.k_folds
+        n = len(self.features) #dimensione totale del dataset
+        indices = np.arange(n) #crea array di indici da 0 a n-1
+        np.random.shuffle(indices) #mescola casualmente gli indici 
+        fold_size = n // self.k_folds #calcola la dimensione di ogni fold (divisione intera)
+
+        """Inizializziamo le liste per salvare i folds (insiemi di training e test)"""
 
         X_train_folds, Y_train_folds = [], []
         X_test_folds, Y_test_folds = [], []
         test_indices_folds = [] 
 
+        """Generiamo un loop per creare i folds"""
+
         for i in range(self.k_folds):
-            # per l'ultimo fold prendiamo tutti gli indici rimanenti
+
+            """Se non è l'ultimo fold, assegna fold_size elementi al test set, altrimenti assegna i restanti elementi"""
+
             if i < self.k_folds - 1:
                 test_indices = indices[i * fold_size: (i + 1) * fold_size]
             else:
                 test_indices = indices[i * fold_size:]
 
-            train_indices = np.setdiff1d(indices, test_indices)
+            train_indices = np.setdiff1d(indices, test_indices) #gli indici di training sono tutti gli indici esclusi quelli di test
 
             # Salvataggio dei vari set
             X_train_folds.append(self.features.iloc[train_indices])
@@ -65,14 +73,15 @@ class SplitData:
     #definiamo il metodo per effetturale la Leave-One-Out Cross Validation
     def split_leave_one_out(self):
         """
-        Divide i dati per Leave-One-Out Cross Validation.
+        Divide i dati per Leave-One-Out Cross Validation, dove ogni campione viene usato come test una volta sola.
+
         """
         n = len(self.features) #utilizziamo la lunghezza totale del dataset
         X_train_folds, Y_train_folds, X_test_folds, Y_test_folds = [], [], [], []
         
     #creo un loop per iterare una volta per ogni dato
         for i in range(n):
-            test_indices = [i] #test set
+            test_indices = [i] #test set di cui seleziona un solo dato
             train_indices = np.setdiff1d(np.arange(n), test_indices) #training set è costituito da tutti gli altri dati escluso test_indices
             
             X_train_folds.append(self.features.iloc[train_indices])

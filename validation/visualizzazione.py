@@ -2,9 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-import numpy as np
-import matplotlib.pyplot as plt
-
 def plot_confusion_matrix(y_true, y_pred):
     """
     Genera e visualizza una Confusion Matrix.

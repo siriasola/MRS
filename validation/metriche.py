@@ -20,21 +20,6 @@ class MetricheCrossValidation:
         - previsioni: Serie dei valori predetti (0/1)
         - probabilita: Serie delle 'probabilità' di classe 1 (se disponibile)
         """
-
-
-        #print(">>> calcolo_metriche è stato chiamato!")  # Stampa di debug
-
-        #print("Distribuzione y_test:", np.unique(y_test, return_counts=True))
-        #print("Distribuzione previsioni:", np.unique(previsioni, return_counts=True))
-
-        """
-        Calcola le metriche per una singola iterazione.
-
-        INPUT: 
-        y_test (pd.Series) sono i valori reali 
-        previsioni (pd.Series) sono i valori predetti
-        """
-
         
         vero_positivo = np.sum((y_test == 1) & (previsioni == 1))
         vero_negativo = np.sum((y_test == 0) & (previsioni == 0))
@@ -186,7 +171,4 @@ class MetricheCrossValidation:
         plt.legend()
         plt.show()
 
-    def salva_metriche_csv(self, metriche, filename="results/metrics.csv"):
-        import os 
-        os.makedirs(os.path.dirname(filename), exist_ok = True)
-        df = pd.DataFrame([metriche])
+  

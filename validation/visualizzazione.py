@@ -47,7 +47,7 @@ def plot_confusion_matrix(y_true, y_pred):
             plt.text(j, i, str(cm[i, j]), ha='center', va='center', color="black")
 
     plt.title("Confusion Matrix")
-    plt.show()
+    #plt.show()
 
 import matplotlib.pyplot as plt
 
@@ -72,7 +72,7 @@ def plot_metriche_bar(metriche_dict):
     plt.ylabel("Value")
 
     plt.tight_layout()
-    plt.show()
+    
 
 
 def plot_roc_curve(y_true, y_prob):
@@ -110,13 +110,14 @@ def plot_roc_curve(y_true, y_prob):
     auc = np.trapz(tpr, fpr)
 
     # Plot della Curva ROC
+    plt.figure(figsize=(8, 6))
     plt.plot(fpr, tpr, marker="o", linestyle="-", label=f"AUC = {auc:.3f}")
     plt.plot([0, 1], [0, 1], linestyle="--", color="gray")  # Linea random
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
     plt.title("Curva ROC")
     plt.legend()
-    plt.show()
+    
 
     
 

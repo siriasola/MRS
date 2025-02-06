@@ -1,10 +1,12 @@
 import pandas as pd
+import os
 from preprocessing.importdata import DatasetProcessor
 from preprocessing.data_cleaner import DataCleaner, MissingValueHandler, choose_missing_value_method
 from preprocessing.normalizzazione import FeatureScaler, user_choose_scaling_method
 from validation.evaluation import Evaluation
 from validation.visualizzazione import plot_confusion_matrix, plot_metriche_bar, plot_roc_curve
 from models import ClassificatoreKNN
+from save_results_to_excel import save_results_to_excel
 
 
 def load_and_prepare_data():
@@ -52,19 +54,6 @@ def evaluate_model(features, target, strategy, param, k):
     
     return y_test, y_pred, metrics_result
 
-
-def visualize_results(y_test, y_pred, metrics_result):
-    """Genera visualizzazioni dei risultati e stampa le metriche."""
-    print("\n Risultati della validazione:")
-    for metrica, valore in metrics_result.items():
-        print(f"{metrica}: {valore:.4f}")
-    
-    plot_confusion_matrix(y_test.to_numpy(), y_pred)
-    plot_roc_curve(y_test.to_numpy(), y_pred)
-    plot_metriche_bar(metrics_result)
-    print("\nProcesso completato con successo!")
-
-
 def main():
     """Funzione principale del programma."""
     features, target = load_and_prepare_data()
@@ -74,7 +63,7 @@ def main():
     strategy, param = choose_validation_strategy()
     k = choose_knn_params()
     y_test, y_pred, metrics_result = evaluate_model(features, target, strategy, param, k)
-    visualize_results(y_test, y_pred, metrics_result)
+    save_results_to_excel(metrics_result, y_test, y_pred)
 
 
 if __name__ == "__main__":

@@ -44,25 +44,7 @@ def save_results_to_excel(metrics_result, y_test, y_pred):
 
     print(f"\nGrafici salvati in {results_dir}")
 
-    """
-    # Apri il file Excel e aggiungi le immagini
-    wb = load_workbook(excel_file)
-    ws = wb.active
-
-    # Inserisci le immagini nel foglio Excel
-    img1 = Image(confusion_matrix_file)
-    img2 = Image(roc_curve_file)
-    img3 = Image(metrics_bar_chart_file)
-
-    ws.add_image(img1, "D2")  # Posizione della Confusion Matrix
-    ws.add_image(img2, "D20")  # Posizione della curva ROC
-    ws.add_image(img3, "D38")  # Posizione del grafico delle metriche
-
-    # Salva il file Excel aggiornato
-    wb.save(excel_file)
-    print(f"\nImmagini aggiunte e file aggiornato: {excel_file}")
-    """
-    # Apri il file Excel e aggiungi le immagini in fogli separati
+    # Apre il file Excel e aggiungi le immagini in fogli separati
     wb = load_workbook(excel_file)
 
     # Lista di immagini e relativi nomi di fogli

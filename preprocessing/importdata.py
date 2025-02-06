@@ -1,5 +1,8 @@
 import pandas as pd
 import os
+from preprocessing.data_cleaner import DataCleaner, MissingValueHandler, choose_missing_value_method
+from preprocessing.normalizzazione import FeatureScaler, user_choose_scaling_method
+
 
 class DatasetProcessor:
     """
@@ -40,3 +43,17 @@ class DatasetProcessor:
         except Exception as e:
             print(f"Errore nel caricamento del file: {e}")
             return None  # Restituisce None se il caricamento fallisce
+
+def load_and_prepare_data(file_path):
+    """Carica, pulisce e pre-processa il dataset."""
+    df = DatasetProcessor(file_path).load_data()
+    if df is None or df.empty:
+        print("Errore: Dataset vuoto o non caricato correttamente.")
+        return None, None
+    df = DataCleaner("classtype_v1").clean(df)
+    df = MissingValueHandler(choose_missing_value_method()).clean(df)
+    df = FeatureScaler(target_column="classtype_v1").scale_features(df, user_choose_scaling_method())
+        
+    features = df.drop(columns=["classtype_v1"], errors='ignore')
+    target = df["classtype_v1"]
+    return features, target

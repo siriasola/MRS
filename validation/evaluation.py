@@ -110,3 +110,18 @@ class Evaluation:
         metriche_holdout = C_Metriche.calcolo_metriche(Y_test, previsioni, probabilita) #aggiunta di probabilita
 
         return metriche_holdout, np.array(previsioni), Y_test  # Ora restituisce anche le previsioni!
+
+def evaluate_model(features, target, strategy, param, k, metriche_scelte):
+    """Esegue la valutazione del modello e calcola le metriche."""
+    evaluation = Evaluation(features, target, k_folds=(param or 5), metriche_scelte=metriche_scelte, k=k)
+    
+    if strategy == "holdout":
+        metrics_result, y_pred, y_test = evaluation.valutazione_holdout(train_size=param)
+    elif strategy == "k_fold":
+        metrics_result, y_pred = evaluation.valutazione_k_fold()
+        y_test = target
+    else:  # leave_one_out
+        metrics_result, y_pred = evaluation.valutazione_leave_one_out()
+        y_test = target
+        
+    return y_test, y_pred, metrics_result

@@ -39,9 +39,30 @@ def choose_knn_params():
     return k
 
 
-def evaluate_model(features, target, strategy, param, k):
+def choose_metrics():
+    """Permette all'utente di scegliere le metriche da calcolare."""
+    available_metrics = [
+        "Accuracy Rate", "Error Rate", "Sensitivity", 
+        "Specificity", "Geometric Mean", "AUC"
+    ]
+
+    print("\nScegli le metriche da calcolare:")
+    for i, metric in enumerate(available_metrics, 1):
+        print(f"{i}. {metric}")
+    print(f"{len(available_metrics) + 1}. All the above")
+
+    choices = input("Inserisci i numeri delle metriche separati da virgola (es. 1,3) o 'all' per tutte: ").strip()
+
+    if choices.lower() == 'all' or str(len(available_metrics) + 1) in choices.split(","):
+        return available_metrics
+    else:
+        selected_indices = {int(ch.strip()) for ch in choices.split(",") if ch.strip().isdigit()}
+        return [available_metrics[i - 1] for i in selected_indices if 1 <= i <= len(available_metrics)]
+
+
+def evaluate_model(features, target, strategy, param, k, metriche_scelte):
     """Esegue la valutazione del modello e calcola le metriche."""
-    evaluation = Evaluation(features, target, k_folds=(param or 5), metriche_scelte=["Accuracy Rate", "Error Rate", "Sensitivity", "Specificity", "Geometric Mean", "AUC"], k=k)
+    evaluation = Evaluation(features, target, k_folds=(param or 5), metriche_scelte=metriche_scelte, k=k)
     
     if strategy == "holdout":
         metrics_result, y_pred, y_test = evaluation.valutazione_holdout(train_size=param)
@@ -54,15 +75,18 @@ def evaluate_model(features, target, strategy, param, k):
     
     return y_test, y_pred, metrics_result
 
+
 def main():
     """Funzione principale del programma."""
     features, target = load_and_prepare_data()
     if features is None or target is None:
         return
-    
+
     strategy, param = choose_validation_strategy()
     k = choose_knn_params()
-    y_test, y_pred, metrics_result = evaluate_model(features, target, strategy, param, k)
+    metriche_scelte = choose_metrics()
+    
+    y_test, y_pred, metrics_result = evaluate_model(features, target, strategy, param, k, metriche_scelte)
     save_results_to_excel(metrics_result, y_test, y_pred)
 
 

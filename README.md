@@ -7,7 +7,7 @@ La distinzione tra cellule benigne e maligne avviene attraverso l’analisi di d
 ### **Obiettivo del Progetto**  
 Questo progetto si propone di sviluppare un modello di **machine learning** capace di classificare le cellule tumorali in **benigne** o **maligne** con elevata accuratezza. A tal fine, verrà utilizzato il dataset **Breast Cancer Wisconsin (Original)**, ampiamente impiegato nella ricerca per la classificazione dei tumori al seno. L’algoritmo implementato potrà essere utilizzato come supporto ai medici per migliorare la precisione e la rapidità della diagnosi.  
 
-### **Il dataste Dataset version_1.csv**
+### **Analisi Dataset version_1.csv**
 
 Il dataset version_1.csv svolge un ruolo centrale in questo progetto, fornendo i dati necessari per l’analisi e la classificazione dei tumori. Di seguito è riportata una descrizione dettagliata del suo contenuto:
 - Numero di Campioni: Variabile a seconda della versione del dataset, in genere centinaia di campioni.   
